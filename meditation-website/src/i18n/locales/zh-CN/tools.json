@@ -1,0 +1,77 @@
+{
+  "title": "练习工具",
+  "subtitle": "选择一个工具开始今天的练习",
+  "breathing": {
+    "title": "呼吸练习",
+    "desc": "跟随动画节奏进行呼吸练习，快速放松身心",
+    "modes": {
+      "abdominal": "腹式呼吸",
+      "478": "4-7-8 呼吸",
+      "box": "方块呼吸",
+      "custom": "自定义"
+    },
+    "phases": {
+      "inhale": "吸气",
+      "hold": "屏息",
+      "exhale": "呼气",
+      "rest": "休息"
+    },
+    "duration": "练习时长",
+    "start": "开始练习",
+    "pause": "暂停",
+    "resume": "继续",
+    "complete": "练习完成",
+    "totalTime": "本次练习时长"
+  },
+  "focus": {
+    "title": "专注训练",
+    "desc": "凝视屏幕中心，训练你的注意力",
+    "instruction": "将注意力集中在中心的光点上",
+    "duration": "练习时长"
+  },
+  "relaxation": {
+    "title": "放松练习",
+    "desc": "跟随引导进行身体扫描和肌肉放松",
+    "bodyScan": "身体扫描",
+    "muscleRelax": "渐进式肌肉放松"
+  },
+  "meditation": {
+    "title": "冥想引导",
+    "desc": "选择一段引导音频，开始冥想练习",
+    "themes": {
+      "mindfulness": "正念冥想",
+      "lovingKindness": "慈悲冥想",
+      "sleep": "睡前冥想"
+    }
+  },
+  "timer": {
+    "title": "冥想计时器",
+    "desc": "自由设置时长，专注于你的练习",
+    "setDuration": "设置时长",
+    "minutes": "分钟",
+    "bellStart": "开始铃声",
+    "bellEnd": "结束铃声",
+    "bellInterval": "间隔提醒"
+  },
+  "ambient": {
+    "title": "环境音",
+    "desc": "混合多种自然声音，创造你的冥想氛围",
+    "sounds": {
+      "rain": "雨声",
+      "ocean": "海浪",
+      "forest": "森林",
+      "stream": "溪流",
+      "fire": "篝火",
+      "wind": "风声",
+      "birds": "鸟鸣",
+      "whiteNoise": "白噪音"
+    }
+  },
+  "common": {
+    "start": "开始",
+    "pause": "暂停",
+    "stop": "停止",
+    "reset": "重置",
+    "back": "返回"
+  }
+}

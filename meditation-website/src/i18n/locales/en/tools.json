@@ -1,0 +1,77 @@
+{
+  "title": "Practice Tools",
+  "subtitle": "Choose a tool to start your practice today",
+  "breathing": {
+    "title": "Breathing Exercise",
+    "desc": "Follow the animated rhythm to practice breathing and quickly relax",
+    "modes": {
+      "abdominal": "Abdominal Breathing",
+      "478": "4-7-8 Breathing",
+      "box": "Box Breathing",
+      "custom": "Custom"
+    },
+    "phases": {
+      "inhale": "Inhale",
+      "hold": "Hold",
+      "exhale": "Exhale",
+      "rest": "Rest"
+    },
+    "duration": "Duration",
+    "start": "Start Practice",
+    "pause": "Pause",
+    "resume": "Resume",
+    "complete": "Practice Complete",
+    "totalTime": "Total practice time"
+  },
+  "focus": {
+    "title": "Focus Training",
+    "desc": "Gaze at the center of the screen to train your attention",
+    "instruction": "Focus your attention on the center point",
+    "duration": "Duration"
+  },
+  "relaxation": {
+    "title": "Relaxation Practice",
+    "desc": "Follow guided body scan and muscle relaxation exercises",
+    "bodyScan": "Body Scan",
+    "muscleRelax": "Progressive Muscle Relaxation"
+  },
+  "meditation": {
+    "title": "Guided Meditation",
+    "desc": "Select a guided audio to begin your meditation practice",
+    "themes": {
+      "mindfulness": "Mindfulness Meditation",
+      "lovingKindness": "Loving-Kindness Meditation",
+      "sleep": "Sleep Meditation"
+    }
+  },
+  "timer": {
+    "title": "Meditation Timer",
+    "desc": "Set your own duration and focus on your practice",
+    "setDuration": "Set Duration",
+    "minutes": "minutes",
+    "bellStart": "Start Bell",
+    "bellEnd": "End Bell",
+    "bellInterval": "Interval Bell"
+  },
+  "ambient": {
+    "title": "Ambient Sounds",
+    "desc": "Mix various natural sounds to create your meditation atmosphere",
+    "sounds": {
+      "rain": "Rain",
+      "ocean": "Ocean Waves",
+      "forest": "Forest",
+      "stream": "Stream",
+      "fire": "Campfire",
+      "wind": "Wind",
+      "birds": "Birds",
+      "whiteNoise": "White Noise"
+    }
+  },
+  "common": {
+    "start": "Start",
+    "pause": "Pause",
+    "stop": "Stop",
+    "reset": "Reset",
+    "back": "Back"
+  }
+}

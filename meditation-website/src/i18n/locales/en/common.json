@@ -1,0 +1,26 @@
+{
+  "siteName": "Mindful",
+  "nav": {
+    "learn": "Learn",
+    "tools": "Practice",
+    "about": "About"
+  },
+  "about": {
+    "title": "About Mindful",
+    "mission": {
+      "title": "Our Vision",
+      "content": "Mindful is dedicated to providing simple and accessible meditation learning resources and practice tools for everyone seeking inner peace. We believe meditation shouldn't be complicated or mysterious—it's a daily practice anyone can easily begin."
+    },
+    "features": {
+      "title": "What We Offer",
+      "item1": "Complete meditation curriculum from beginner to advanced",
+      "item2": "Interactive practice tools: breathing, focus, relaxation, and guided meditation",
+      "item3": "Rich ambient sounds and meditation timer",
+      "item4": "Local practice tracking to follow your meditation journey"
+    },
+    "start": {
+      "title": "Start Your Meditation Journey",
+      "content": "Whether you're a complete beginner or a practitioner looking to deepen your practice, there's something here for you. Start today with just a few minutes, and experience the peace and calm within."
+    }
+  }
+}

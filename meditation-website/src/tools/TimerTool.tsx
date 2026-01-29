@@ -1,0 +1,232 @@
+import { useState, useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+
+const presetDurations = [5, 10, 15, 20, 30]
+
+export default function TimerTool() {
+  const { t } = useTranslation('tools')
+  const [duration, setDuration] = useState(10)
+  const [customDuration, setCustomDuration] = useState('')
+  const [isActive, setIsActive] = useState(false)
+  const [isPaused, setIsPaused] = useState(false)
+  const [timeLeft, setTimeLeft] = useState(0)
+  const [isComplete, setIsComplete] = useState(false)
+  const intervalRef = useRef<number | null>(null)
+
+  const totalDurationSeconds = duration * 60
+
+  useEffect(() => {
+    if (isActive && !isPaused && timeLeft > 0) {
+      intervalRef.current = window.setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            setIsActive(false)
+            setIsComplete(true)
+            return 0
+          }
+          return prev - 1
+        })
+      }, 1000)
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+      }
+    }
+  }, [isActive, isPaused, timeLeft])
+
+  const handleStart = () => {
+    const mins = customDuration ? parseInt(customDuration) : duration
+    if (mins > 0) {
+      setDuration(mins)
+      setTimeLeft(mins * 60)
+      setIsActive(true)
+      setIsPaused(false)
+      setIsComplete(false)
+    }
+  }
+
+  const handlePause = () => {
+    setIsPaused(!isPaused)
+  }
+
+  const handleReset = () => {
+    setIsActive(false)
+    setIsPaused(false)
+    setTimeLeft(0)
+    setIsComplete(false)
+  }
+
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins}:${secs.toString().padStart(2, '0')}`
+  }
+
+  const progress = totalDurationSeconds > 0
+    ? ((totalDurationSeconds - timeLeft) / totalDurationSeconds) * 100
+    : 0
+
+  if (isComplete) {
+    return (
+      <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 animate-fade-in">
+        <div className="text-center">
+          <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-secondary-light to-secondary/30 flex items-center justify-center mx-auto mb-6 shadow-soft animate-scale-in">
+            <svg className="w-12 h-12 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h2 className="text-3xl font-bold text-gradient mb-3 animate-fade-in-up stagger-1">
+            {t('timer.complete') || 'Session Complete'}
+          </h2>
+          <p className="text-text-secondary text-lg mb-8 animate-fade-in-up stagger-2">
+            {duration} {t('timer.minutes')} {t('timer.session') || 'meditation'}
+          </p>
+          <div className="flex gap-4 justify-center animate-fade-in-up stagger-3">
+            <button
+              onClick={handleReset}
+              className="px-8 py-4 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:scale-105"
+            >
+              {t('common.start')}
+            </button>
+            <Link
+              to="/tools"
+              className="px-8 py-4 border-2 border-primary/20 text-primary rounded-2xl font-medium hover:border-primary/40 hover:bg-primary/5 transition-all duration-300"
+            >
+              {t('common.back')}
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-[80vh] flex flex-col items-center justify-center px-4">
+      {!isActive ? (
+        <div className="w-full max-w-md animate-fade-in-up">
+          <Link to="/tools" className="inline-flex items-center gap-2 text-text-secondary hover:text-primary mb-8 transition-all duration-300 hover:gap-3">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            {t('common.back')}
+          </Link>
+
+          <h1 className="text-3xl font-bold text-gradient mb-3">{t('timer.title')}</h1>
+          <p className="text-text-secondary mb-8 leading-relaxed">{t('timer.desc')}</p>
+
+          {/* Preset Duration Selection */}
+          <div className="mb-6">
+            <label className="block text-sm font-semibold text-text mb-4">
+              {t('timer.setDuration')}
+            </label>
+            <div className="grid grid-cols-5 gap-2">
+              {presetDurations.map((d) => (
+                <button
+                  key={d}
+                  onClick={() => {
+                    setDuration(d)
+                    setCustomDuration('')
+                  }}
+                  className={`p-4 rounded-2xl text-sm font-medium transition-all duration-300 border-2 ${
+                    duration === d && !customDuration
+                      ? 'bg-gradient-to-br from-primary to-primary-dark text-white border-transparent shadow-soft scale-105'
+                      : 'bg-card text-text-secondary border-border-light hover:border-primary/30 hover:bg-primary/5'
+                  }`}
+                >
+                  {d}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Custom Duration */}
+          <div className="mb-8">
+            <label className="block text-sm font-semibold text-text mb-4">
+              {t('timer.custom') || 'Custom'} ({t('timer.minutes')})
+            </label>
+            <input
+              type="number"
+              value={customDuration}
+              onChange={(e) => setCustomDuration(e.target.value)}
+              placeholder={t('timer.enterMinutes') || 'Enter minutes'}
+              min="1"
+              max="120"
+              className="w-full p-4 rounded-2xl border-2 border-border-light bg-card text-text focus:border-primary focus:outline-none transition-all duration-300 shadow-soft focus:shadow-medium"
+            />
+          </div>
+
+          <button
+            onClick={handleStart}
+            className="w-full py-4 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-semibold text-lg shadow-soft hover:shadow-medium transition-all duration-300 hover:scale-[1.02]"
+          >
+            {t('common.start')}
+          </button>
+        </div>
+      ) : (
+        <div className="text-center animate-fade-in">
+          {/* Circular Progress */}
+          <div className="relative w-80 h-80 mx-auto mb-12">
+            {/* Background circle */}
+            <svg className="w-full h-full transform -rotate-90">
+              <circle
+                cx="160"
+                cy="160"
+                r="140"
+                fill="none"
+                stroke="var(--color-background-alt)"
+                strokeWidth="12"
+              />
+              <circle
+                cx="160"
+                cy="160"
+                r="140"
+                fill="none"
+                stroke="url(#gradient)"
+                strokeWidth="12"
+                strokeLinecap="round"
+                strokeDasharray={2 * Math.PI * 140}
+                strokeDashoffset={2 * Math.PI * 140 * (1 - progress / 100)}
+                className="transition-all duration-1000"
+              />
+              <defs>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="var(--color-primary)" />
+                  <stop offset="100%" stopColor="var(--color-secondary)" />
+                </linearGradient>
+              </defs>
+            </svg>
+
+            {/* Center content */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <span className="text-6xl font-bold text-gradient mb-2">
+                {formatTime(timeLeft)}
+              </span>
+              <span className="text-text-secondary text-sm">
+                {Math.round(progress)}% {t('common.complete') || 'complete'}
+              </span>
+            </div>
+          </div>
+
+          {/* Controls */}
+          <div className="flex gap-4 justify-center">
+            <button
+              onClick={handlePause}
+              className="px-8 py-4 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:scale-105"
+            >
+              {isPaused ? t('common.start') : t('common.pause')}
+            </button>
+            <button
+              onClick={handleReset}
+              className="px-8 py-4 border-2 border-border text-text-secondary rounded-2xl font-medium hover:border-primary/30 hover:bg-background-alt transition-all duration-300"
+            >
+              {t('common.reset')}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}

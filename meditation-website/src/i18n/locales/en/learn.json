@@ -1,0 +1,37 @@
+{
+  "title": "Learning Center",
+  "subtitle": "A complete meditation course from basic concepts to advanced techniques",
+  "chapter": "Chapter",
+  "chapters": {
+    "basics": "Basics - Understanding Meditation",
+    "breathing": "Breathing - The Art of Breath",
+    "focus": "Focus - Training Attention",
+    "relaxation": "Relaxation - Body & Mind",
+    "meditation": "Meditation - Mindfulness Practice",
+    "advanced": "Advanced - Deep Exploration"
+  },
+  "basics": {
+    "title": "Basics - Understanding Meditation",
+    "intro": "Welcome to your meditation journey. In this chapter, we'll explore what meditation truly is, understand its scientific foundations, and prepare you for your first meditation experience."
+  },
+  "breathing": {
+    "title": "Breathing - The Art of Breath",
+    "intro": "Breath is the bridge between body and mind. Learning proper breathing techniques is an essential foundation for meditation practice."
+  },
+  "focus": {
+    "title": "Focus - Training Attention",
+    "intro": "In an age of information overload, the ability to focus has become rare and valuable. Learn how to train and enhance your attention."
+  },
+  "relaxation": {
+    "title": "Relaxation - Body & Mind",
+    "intro": "Learn various relaxation techniques to release physical tension and bring your mind back to a state of calm."
+  },
+  "meditation": {
+    "title": "Meditation - Mindfulness Practice",
+    "intro": "Explore different meditation methods and find the practice style that works best for you."
+  },
+  "advanced": {
+    "title": "Advanced - Deep Exploration",
+    "intro": "Dive into advanced meditation territories, build lasting practice habits, and integrate meditation into your daily life."
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "hero": {
+    "title": "Find Inner Peace in a Busy World",
+    "subtitle": "Learn meditation from scratch with science-backed methods. Cultivate focus, relax your mind, and improve your quality of life. Just a few minutes a day can make a difference.",
+    "startLearning": "Start Learning",
+    "tryBreathing": "Try Breathing Exercise"
+  },
+  "features": {
+    "title": "Begin Your Meditation Journey",
+    "learn": {
+      "title": "Structured Learning",
+      "desc": "A complete curriculum from basics to advanced techniques, guiding you step by step through core meditation skills."
+    },
+    "practice": {
+      "title": "Interactive Practice",
+      "desc": "Breathing guides, focus training, relaxation exercises, and more—making meditation simple and engaging."
+    },
+    "track": {
+      "title": "Track Progress",
+      "desc": "Monitor your practice duration and streaks, witnessing your growth day by day."
+    }
+  },
+  "quickStart": {
+    "title": "Quick Start",
+    "desc": "Choose a tool and begin your first practice right now",
+    "breathing": "Breathing",
+    "focus": "Focus",
+    "ambient": "Ambient Sounds"
+  }
+}
