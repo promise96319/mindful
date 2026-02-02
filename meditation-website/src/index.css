@@ -1,45 +1,47 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=LXGW+WenKai:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=LXGW+WenKai:wght@300;400;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  /* Colors - 晨曦宁静 暖色系 */
-  --color-primary: #7C9885;
-  --color-primary-light: #B8CFC0;
-  --color-primary-dark: #5A7360;
-  --color-secondary: #E8A87C;
-  --color-secondary-light: #F5D5C0;
-  --color-accent: #C5A3C8;
-  --color-accent-light: #E8D5EA;
-  --color-background: #FAF8F5;
-  --color-background-alt: #F3EDE6;
-  --color-background-warm: #FEF9F3;
+  /* Colors - 清新/干净/大气 亮色主题 */
+  --color-primary: #6366F1;
+  --color-primary-light: #818CF8;
+  --color-primary-dark: #4F46E5;
+  --color-secondary: #8B5CF6;
+  --color-secondary-light: #A78BFA;
+  --color-accent: #10B981;
+  --color-accent-light: #34D399;
+  --color-background: #FFFFFF;
+  --color-background-alt: #F8FAFC;
+  --color-background-tertiary: #F1F5F9;
   --color-card: #FFFFFF;
-  --color-card-hover: #FFFDFB;
-  --color-text: #3D3D3D;
-  --color-text-secondary: #8A8A8A;
-  --color-text-muted: #B0A99F;
-  --color-border: #E8E2DA;
-  --color-border-light: #F0EBE4;
-  --color-success: #8FBC8F;
-  --color-warning: #DEB887;
+  --color-card-hover: #FAFBFC;
+  --color-text: #0F172A;
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748B;
+  --color-border: #E2E8F0;
+  --color-border-light: #F1F5F9;
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
 
   /* Font families */
-  --font-sans: 'DM Sans', 'LXGW WenKai', system-ui, sans-serif;
-  --font-display: 'DM Sans', 'LXGW WenKai', system-ui, sans-serif;
+  --font-sans: 'Inter', 'LXGW WenKai', system-ui, sans-serif;
+  --font-display: 'Playfair Display', 'LXGW WenKai', serif;
 
-  /* Border radius - 更柔和的圆角 */
+  /* Border radius */
   --radius-full: 9999px;
   --radius-2xl: 24px;
-  --radius-xl: 20px;
-  --radius-lg: 16px;
-  --radius-md: 12px;
-  --radius-sm: 8px;
+  --radius-xl: 16px;
+  --radius-lg: 12px;
+  --radius-md: 8px;
+  --radius-sm: 4px;
 
-  /* Shadows - 柔和的阴影 */
-  --shadow-soft: 0 2px 20px -4px rgba(124, 152, 133, 0.08), 0 4px 8px -2px rgba(0, 0, 0, 0.03);
-  --shadow-medium: 0 8px 30px -8px rgba(124, 152, 133, 0.12), 0 4px 12px -4px rgba(0, 0, 0, 0.04);
-  --shadow-large: 0 20px 50px -12px rgba(124, 152, 133, 0.18), 0 8px 20px -8px rgba(0, 0, 0, 0.05);
-  --shadow-glow: 0 0 40px rgba(124, 152, 133, 0.15);
+  /* Shadows - 亮色主题 */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-large: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.15);
   --shadow-inner: inset 0 2px 8px rgba(0, 0, 0, 0.04);
 
   /* Animations */
@@ -48,10 +50,41 @@
   --ease-slow: cubic-bezier(0.25, 0.1, 0.25, 1);
 
   /* Transition durations */
-  --duration-fast: 200ms;
-  --duration-normal: 350ms;
-  --duration-slow: 500ms;
-  --duration-slower: 800ms;
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+  --duration-slower: 500ms;
+}
+
+/* Dark theme colors */
+[data-theme="dark"] {
+  --color-primary: #818CF8;
+  --color-primary-light: #A5B4FC;
+  --color-primary-dark: #6366F1;
+  --color-secondary: #A78BFA;
+  --color-secondary-light: #C4B5FD;
+  --color-accent: #34D399;
+  --color-accent-light: #6EE7B7;
+  --color-background: #0F172A;
+  --color-background-alt: #1E293B;
+  --color-background-tertiary: #334155;
+  --color-card: #1E293B;
+  --color-card-hover: #334155;
+  --color-text: #F1F5F9;
+  --color-text-secondary: #CBD5E1;
+  --color-text-muted: #94A3B8;
+  --color-border: #334155;
+  --color-border-light: #475569;
+  --color-success: #34D399;
+  --color-warning: #FBBF24;
+  --color-error: #F87171;
+
+  /* Shadows - 暗色主题 */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+  --shadow-large: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 40px rgba(129, 140, 248, 0.2);
 }
 
 /* Custom Keyframes */
@@ -143,10 +176,18 @@
     -webkit-backdrop-filter: blur(16px);
   }
 
+  [data-theme="dark"] .glass {
+    background: rgba(15, 23, 42, 0.7);
+  }
+
   .glass-warm {
     background: rgba(250, 248, 245, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
+  }
+
+  [data-theme="dark"] .glass-warm {
+    background: rgba(30, 41, 59, 0.9);
   }
 
   .text-gradient {
@@ -157,7 +198,7 @@
   }
 
   .bg-gradient-warm {
-    background: linear-gradient(180deg, var(--color-background-warm) 0%, var(--color-background) 100%);
+    background: linear-gradient(180deg, var(--color-background-alt) 0%, var(--color-background) 100%);
   }
 
   .bg-gradient-serene {
@@ -192,6 +233,7 @@
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   body {
@@ -298,6 +340,18 @@
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
     opacity: 0.5;
+  }
+}
+
+/* Reduced motion support for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

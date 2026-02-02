@@ -1,5 +1,6 @@
 import { usePracticeStats } from '../hooks/usePracticeStats'
 import { useTranslation } from 'react-i18next'
+import { ClockIcon } from './icons'
 
 export default function StatsCard() {
   const { getStats } = usePracticeStats()
@@ -38,10 +39,8 @@ export default function StatsCard() {
     return (
       <div className="bg-card/80 backdrop-blur-sm rounded-2xl p-8 border border-border-light shadow-soft animate-fade-in-up">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary-light/30 to-secondary-light/30 flex items-center justify-center">
-            <svg className="w-8 h-8 text-primary/60" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+            <ClockIcon className="w-8 h-8 text-primary/60" />
           </div>
           <p className="text-text-secondary text-center">{t.noData}</p>
         </div>
@@ -50,10 +49,10 @@ export default function StatsCard() {
   }
 
   const statItems = [
-    { value: formatDuration(stats.todayTotal), label: t.today, color: 'primary' },
-    { value: formatDuration(stats.weekTotal), label: t.week, color: 'primary' },
-    { value: formatDuration(stats.monthTotal), label: t.month, color: 'primary' },
-    { value: stats.streak.toString(), label: t.streak, color: 'secondary' },
+    { value: formatDuration(stats.todayTotal), label: t.today, color: 'primary' as const },
+    { value: formatDuration(stats.weekTotal), label: t.week, color: 'primary' as const },
+    { value: formatDuration(stats.monthTotal), label: t.month, color: 'primary' as const },
+    { value: stats.streak.toString(), label: t.streak, color: 'secondary' as const },
   ]
 
   return (
@@ -62,7 +61,7 @@ export default function StatsCard() {
         {statItems.map((item, index) => (
           <div
             key={item.label}
-            className={`text-center opacity-0 animate-fade-in-up`}
+            className="text-center opacity-0 animate-fade-in-up"
             style={{ animationDelay: `${index * 0.1}s`, animationFillMode: 'forwards' }}
           >
             <div className="relative inline-block">

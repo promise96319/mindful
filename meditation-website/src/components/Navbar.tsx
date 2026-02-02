@@ -1,6 +1,7 @@
 import { Link, NavLink } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useState, useEffect } from 'react'
+import ThemeToggle from './ThemeToggle'
 
 export default function Navbar() {
   const { t, i18n } = useTranslation('common')
@@ -67,8 +68,12 @@ export default function Navbar() {
           </NavLink>
         </div>
 
-        {/* Language Toggle */}
-        <div className="flex items-center gap-3">
+        {/* Theme & Language Toggle */}
+        <div className="flex items-center gap-2">
+          {/* Theme Toggle */}
+          <ThemeToggle />
+
+          {/* Language Toggle */}
           <button
             onClick={toggleLanguage}
             className="relative overflow-hidden px-4 py-2 rounded-full text-sm font-medium border border-border text-text-secondary hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all duration-300"
@@ -140,6 +145,11 @@ export default function Navbar() {
           >
             {t('nav.about')}
           </NavLink>
+
+          {/* Mobile Theme Toggle */}
+          <div className="pt-3 mt-3 border-t border-border-light">
+            <ThemeToggle showLabel className="w-full justify-center px-4 py-3 rounded-xl" />
+          </div>
         </div>
       </div>
     </header>

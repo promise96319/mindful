@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>冥想应用 - 设计系统预览</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+           设计系统变量 - 清新/干净/大气
+           支持亮色和暗色两套主题
+           ============================================ */
+
+        :root {
+            /* 亮色主题 */
+            --color-primary: #6366F1;
+            --color-primary-light: #818CF8;
+            --color-primary-dark: #4F46E5;
+
+            --color-secondary: #8B5CF6;
+            --color-secondary-light: #A78BFA;
+
+            --color-accent: #10B981;
+            --color-accent-light: #34D399;
+
+            --color-bg-primary: #FFFFFF;
+            --color-bg-secondary: #F8FAFC;
+            --color-bg-tertiary: #F1F5F9;
+
+            --color-surface: #FFFFFF;
+            --color-surface-elevated: #FFFFFF;
+
+            --color-text-primary: #0F172A;
+            --color-text-secondary: #475569;
+            --color-text-tertiary: #64748B;
+
+            --color-border: #E2E8F0;
+            --color-border-light: #F1F5F9;
+
+            /* 阴影系统 */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+            /* 字体 */
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+
+            /* 间距 */
+            --spacing-unit: 8px;
+            --border-radius: 12px;
+            --border-radius-lg: 16px;
+            --border-radius-xl: 24px;
+        }
+
+        [data-theme="dark"] {
+            /* 暗色主题 */
+            --color-primary: #818CF8;
+            --color-primary-light: #A5B4FC;
+            --color-primary-dark: #6366F1;
+
+            --color-secondary: #A78BFA;
+            --color-secondary-light: #C4B5FD;
+
+            --color-accent: #34D399;
+            --color-accent-light: #6EE7B7;
+
+            --color-bg-primary: #0F172A;
+            --color-bg-secondary: #1E293B;
+            --color-bg-tertiary: #334155;
+
+            --color-surface: #1E293B;
+            --color-surface-elevated: #334155;
+
+            --color-text-primary: #F1F5F9;
+            --color-text-secondary: #CBD5E1;
+            --color-text-tertiary: #94A3B8;
+
+            --color-border: #334155;
+            --color-border-light: #475569;
+
+            /* 暗色模式阴影 */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ============================================
+           基础样式重置
+           ============================================ */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* ============================================
+           主题切换按钮
+           ============================================ */
+
+        .theme-toggle {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 1000;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius);
+            padding: 12px 20px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text-primary);
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* ============================================
+           容器和布局
+           ============================================ */
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        .section {
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 48px;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--color-text-secondary);
+            margin-bottom: 48px;
+            max-width: 600px;
+        }
+
+        /* ============================================
+           色彩展示
+           ============================================ */
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .color-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+
+        .color-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .color-swatch {
+            height: 120px;
+            width: 100%;
+        }
+
+        .color-info {
+            padding: 16px;
+        }
+
+        .color-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--color-text-primary);
+            margin-bottom: 4px;
+        }
+
+        .color-value {
+            font-size: 12px;
+            font-family: monospace;
+            color: var(--color-text-tertiary);
+        }
+
+        /* ============================================
+           组件展示
+           ============================================ */
+
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+        }
+
+        .card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius-lg);
+            padding: 32px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .card-title {
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-bottom: 12px;
+        }
+
+        .card-description {
+            font-size: 15px;
+            color: var(--color-text-secondary);
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        /* ============================================
+           按钮系统
+           ============================================ */
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            font-family: var(--font-body);
+            font-size: 15px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--color-secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-secondary-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-accent {
+            background: var(--color-accent);
+            color: white;
+        }
+
+        .btn-accent:hover {
+            background: var(--color-accent-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        /* ============================================
+           字体展示
+           ============================================ */
+
+        .typography-sample {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius-lg);
+            padding: 40px;
+            margin-bottom: 24px;
+        }
+
+        .display-text {
+            font-family: var(--font-display);
+            font-size: 56px;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .body-text {
+            font-family: var(--font-body);
+            font-size: 16px;
+            color: var(--color-text-secondary);
+            line-height: 1.7;
+            max-width: 700px;
+        }
+
+        /* ============================================
+           响应式设计
+           ============================================ */
+
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 36px;
+            }
+
+            .display-text {
+                font-size: 40px;
+            }
+
+            .color-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .component-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .theme-toggle {
+                top: 16px;
+                right: 16px;
+            }
+        }
+
+        /* ============================================
+           动画效果
+           ============================================ */
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span id="theme-icon">🌙</span> 切换主题
+    </button>
+
+    <div class="container">
+        <!-- 标题部分 -->
+        <section class="section">
+            <h1 class="section-title">冥想应用设计系统</h1>
+            <p class="section-subtitle">
+                清新、干净、大气的现代设计风格，完美支持亮色和暗色两套主题系统
+            </p>
+        </section>
+
+        <!-- 色彩系统 -->
+        <section class="section">
+            <h2 class="section-title">色彩系统</h2>
+            <p class="section-subtitle">
+                精心挑选的配色方案，确保在两种主题下都有出色的视觉效果和可访问性
+            </p>
+
+            <div class="color-grid">
+                <div class="color-card">
+                    <div class="color-swatch" style="background: var(--color-primary);"></div>
+                    <div class="color-info">
+                        <div class="color-name">主色调</div>
+                        <div class="color-value">Primary</div>
+                    </div>
+                </div>
+
+                <div class="color-card">
+                    <div class="color-swatch" style="background: var(--color-secondary);"></div>
+                    <div class="color-info">
+                        <div class="color-name">次要色</div>
+                        <div class="color-value">Secondary</div>
+                    </div>
+                </div>
+
+                <div class="color-card">
+                    <div class="color-swatch" style="background: var(--color-accent);"></div>
+                    <div class="color-info">
+                        <div class="color-name">强调色</div>
+                        <div class="color-value">Accent</div>
+                    </div>
+                </div>
+
+                <div class="color-card">
+                    <div class="color-swatch" style="background: var(--color-bg-secondary);"></div>
+                    <div class="color-info">
+                        <div class="color-name">背景色</div>
+                        <div class="color-value">Background</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 按钮系统 -->
+        <section class="section">
+            <h2 class="section-title">按钮系统</h2>
+            <p class="section-subtitle">
+                多种按钮样式，适用于不同的交互场景
+            </p>
+
+            <div class="button-group">
+                <button class="btn btn-primary">主要按钮</button>
+                <button class="btn btn-secondary">次要按钮</button>
+                <button class="btn btn-accent">强调按钮</button>
+                <button class="btn btn-outline">轮廓按钮</button>
+            </div>
+        </section>
+
+        <!-- 卡片组件 -->
+        <section class="section">
+            <h2 class="section-title">卡片组件</h2>
+            <p class="section-subtitle">
+                优雅的卡片设计，带有精致的阴影和悬停效果
+            </p>
+
+            <div class="component-grid">
+                <div class="card">
+                    <h3 class="card-title">冥想练习</h3>
+                    <p class="card-description">
+                        通过引导式冥想，帮助你放松身心，减轻压力，提升专注力和内心平静。
+                    </p>
+                    <button class="btn btn-primary">开始练习</button>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">呼吸训练</h3>
+                    <p class="card-description">
+                        学习正确的呼吸技巧，改善睡眠质量，增强身体健康，提升整体幸福感。
+                    </p>
+                    <button class="btn btn-secondary">了解更多</button>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">正念生活</h3>
+                    <p class="card-description">
+                        将正念融入日常生活，培养觉察力，享受当下每一刻，活出更有意义的人生。
+                    </p>
+                    <button class="btn btn-accent">探索课程</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 字体系统 -->
+        <section class="section">
+            <h2 class="section-title">字体系统</h2>
+            <p class="section-subtitle">
+                优雅的字体组合：Playfair Display（标题）+ Inter（正文）
+            </p>
+
+            <div class="typography-sample">
+                <div class="display-text">
+                    内心的平静<br>从此刻开始
+                </div>
+                <p class="body-text">
+                    冥想不仅仅是一种练习，更是一种生活方式。通过每天几分钟的冥想，你可以培养内心的平静，提升专注力，改善情绪管理，并在快节奏的现代生活中找到属于自己的宁静空间。让我们一起开启这段探索内心的旅程。
+                </p>
+            </div>
+        </section>
+
+        <!-- 设计原则 -->
+        <section class="section">
+            <h2 class="section-title">设计原则</h2>
+            <p class="section-subtitle">
+                我们遵循的核心设计理念
+            </p>
+
+            <div class="component-grid">
+                <div class="card">
+                    <h3 class="card-title">清新简洁</h3>
+                    <p class="card-description">
+                        去除不必要的装饰，保持界面的清爽和简洁，让用户专注于核心内容和功能。
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">优雅大气</h3>
+                    <p class="card-description">
+                        使用精致的字体、合理的留白和柔和的配色，营造出高端、专业的视觉体验。
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">双主题支持</h3>
+                    <p class="card-description">
+                        完美适配亮色和暗色两种主题，确保在不同环境下都能提供舒适的使用体验。
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // 主题切换功能
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            const icon = document.getElementById('theme-icon');
+
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+
+            icon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        }
+
+        // 页面加载时恢复主题设置
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const icon = document.getElementById('theme-icon');
+
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            icon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+        })();
+    </script>
+</body>
+</html>
