@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { usePracticeStats } from '../hooks/usePracticeStats'
+import CompletionScreen from '../components/CompletionScreen'
 
 type BreathingMode = 'abdominal' | '478' | 'box'
 type Phase = 'inhale' | 'hold' | 'exhale' | 'rest'
@@ -15,6 +17,7 @@ const durations = [1, 3, 5, 10]
 
 export default function BreathingTool() {
   const { t } = useTranslation('tools')
+  const { addRecord } = usePracticeStats()
   const [mode, setMode] = useState<BreathingMode>('box')
   const [duration, setDuration] = useState(3)
   const [isActive, setIsActive] = useState(false)
@@ -24,6 +27,7 @@ export default function BreathingTool() {
   const [totalTime, setTotalTime] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
   const intervalRef = useRef<number | null>(null)
+  const recordedRef = useRef(false)
 
   const pattern = breathingPatterns[mode]
   const totalDurationSeconds = duration * 60
@@ -92,6 +96,13 @@ export default function BreathingTool() {
     }
   }, [isActive, isPaused, phase, totalDurationSeconds])
 
+  useEffect(() => {
+    if (isComplete && !recordedRef.current) {
+      recordedRef.current = true
+      addRecord('breathing', Math.floor(totalTime))
+    }
+  }, [isComplete])
+
   const handleStart = () => {
     setIsActive(true)
     setIsPaused(false)
@@ -99,6 +110,7 @@ export default function BreathingTool() {
     setPhaseTime(0)
     setTotalTime(0)
     setIsComplete(false)
+    recordedRef.current = false
   }
 
   const handlePause = () => {
@@ -112,6 +124,7 @@ export default function BreathingTool() {
     setPhaseTime(0)
     setTotalTime(0)
     setIsComplete(false)
+    recordedRef.current = false
   }
 
   const formatTime = (seconds: number): string => {
@@ -122,35 +135,13 @@ export default function BreathingTool() {
 
   if (isComplete) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 animate-fade-in">
-        <div className="text-center">
-          <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-secondary-light to-secondary/30 flex items-center justify-center mx-auto mb-6 shadow-soft animate-scale-in">
-            <svg className="w-12 h-12 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <h2 className="text-3xl font-bold text-gradient mb-3 animate-fade-in-up stagger-1">
-            {t('breathing.complete')}
-          </h2>
-          <p className="text-text-secondary text-lg mb-8 animate-fade-in-up stagger-2">
-            {t('breathing.totalTime')}: {formatTime(totalTime)}
-          </p>
-          <div className="flex gap-4 justify-center animate-fade-in-up stagger-3">
-            <button
-              onClick={handleReset}
-              className="px-8 py-4 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:scale-105"
-            >
-              {t('breathing.start')}
-            </button>
-            <Link
-              to="/tools"
-              className="px-8 py-4 border-2 border-primary/20 text-primary rounded-2xl font-medium hover:border-primary/40 hover:bg-primary/5 transition-all duration-300"
-            >
-              {t('common.back')}
-            </Link>
-          </div>
-        </div>
-      </div>
+      <CompletionScreen
+        toolName="breathing"
+        duration={Math.floor(totalTime)}
+        onRestart={handleReset}
+        completeTitleKey="breathing.complete"
+        completeMessage={`${t('breathing.totalTime')}: ${formatTime(totalTime)}`}
+      />
     )
   }
 
@@ -223,17 +214,12 @@ export default function BreathingTool() {
         <div className="text-center animate-fade-in">
           {/* Breathing Circle */}
           <div className="relative w-80 h-80 mx-auto mb-12">
-            {/* Outer glow rings */}
             <div className="absolute inset-0 rounded-full bg-primary/10 blur-2xl animate-breathe" />
             <div className="absolute inset-4 rounded-full bg-primary/20 blur-xl animate-breathe" style={{ animationDelay: '0.5s' }} />
-
-            {/* Main breathing circle */}
             <div
               className="absolute inset-0 rounded-full bg-gradient-to-br from-primary-light via-primary to-primary-dark shadow-large transition-transform duration-100 ease-out"
               style={{ transform: `scale(${getCircleScale()})` }}
             />
-
-            {/* Center content */}
             <div className="absolute inset-0 flex flex-col items-center justify-center">
               <span className="text-white text-2xl font-semibold mb-2">
                 {t(`breathing.phases.${phase}`)}
@@ -244,7 +230,6 @@ export default function BreathingTool() {
             </div>
           </div>
 
-          {/* Timer */}
           <p className="text-5xl font-bold text-gradient mb-3">
             {formatTime(totalDurationSeconds - totalTime)}
           </p>
@@ -252,7 +237,6 @@ export default function BreathingTool() {
             {formatTime(totalTime)} / {formatTime(totalDurationSeconds)}
           </p>
 
-          {/* Controls */}
           <div className="flex gap-4 justify-center">
             <button
               onClick={handlePause}

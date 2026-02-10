@@ -1,16 +1,20 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { usePracticeStats } from '../hooks/usePracticeStats'
+import CompletionScreen from '../components/CompletionScreen'
 
 const durations = [1, 3, 5, 10]
 
 export default function FocusTool() {
   const { t } = useTranslation('tools')
+  const { addRecord } = usePracticeStats()
   const [duration, setDuration] = useState(3)
   const [isActive, setIsActive] = useState(false)
   const [timeLeft, setTimeLeft] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
   const intervalRef = useRef<number | null>(null)
+  const recordedRef = useRef(false)
 
   const totalDurationSeconds = duration * 60
 
@@ -35,16 +39,25 @@ export default function FocusTool() {
     }
   }, [isActive, timeLeft])
 
+  useEffect(() => {
+    if (isComplete && !recordedRef.current) {
+      recordedRef.current = true
+      addRecord('focus', totalDurationSeconds)
+    }
+  }, [isComplete])
+
   const handleStart = () => {
     setTimeLeft(totalDurationSeconds)
     setIsActive(true)
     setIsComplete(false)
+    recordedRef.current = false
   }
 
   const handleReset = () => {
     setIsActive(false)
     setTimeLeft(0)
     setIsComplete(false)
+    recordedRef.current = false
   }
 
   const formatTime = (seconds: number): string => {
@@ -55,35 +68,13 @@ export default function FocusTool() {
 
   if (isComplete) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 animate-fade-in">
-        <div className="text-center">
-          <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-secondary-light to-secondary/30 flex items-center justify-center mx-auto mb-6 shadow-soft animate-scale-in">
-            <svg className="w-12 h-12 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <h2 className="text-3xl font-bold text-gradient mb-3 animate-fade-in-up stagger-1">
-            {t('focus.complete') || 'Practice Complete'}
-          </h2>
-          <p className="text-text-secondary text-lg mb-8 animate-fade-in-up stagger-2">
-            {t('focus.completeMsg') || 'Great focus session!'}
-          </p>
-          <div className="flex gap-4 justify-center animate-fade-in-up stagger-3">
-            <button
-              onClick={handleReset}
-              className="px-8 py-4 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:scale-105"
-            >
-              {t('common.start')}
-            </button>
-            <Link
-              to="/tools"
-              className="px-8 py-4 border-2 border-primary/20 text-primary rounded-2xl font-medium hover:border-primary/40 hover:bg-primary/5 transition-all duration-300"
-            >
-              {t('common.back')}
-            </Link>
-          </div>
-        </div>
-      </div>
+      <CompletionScreen
+        toolName="focus"
+        duration={totalDurationSeconds}
+        onRestart={handleReset}
+        completeTitleKey="focus.complete"
+        completeMessage={t('focus.completeMsg') || 'Great focus session!'}
+      />
     )
   }
 
@@ -101,7 +92,6 @@ export default function FocusTool() {
           <h1 className="text-3xl font-bold text-gradient mb-3">{t('focus.title')}</h1>
           <p className="text-text-secondary mb-8 leading-relaxed">{t('focus.instruction')}</p>
 
-          {/* Duration Selection */}
           <div className="mb-8">
             <label className="block text-sm font-semibold text-text mb-4">
               {t('focus.duration')}
@@ -132,26 +122,20 @@ export default function FocusTool() {
         </div>
       ) : (
         <div className="text-center w-full max-w-2xl animate-fade-in">
-          {/* Focus Point */}
           <div className="relative w-full aspect-square max-w-md mx-auto mb-12 flex items-center justify-center">
-            {/* Animated rings */}
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary-light/20 to-accent-light/20 animate-breathe" />
             <div className="absolute inset-8 rounded-full bg-gradient-to-br from-primary/30 to-accent/30 animate-breathe" style={{ animationDelay: '0.5s' }} />
             <div className="absolute inset-16 rounded-full bg-gradient-to-br from-primary-light/40 to-accent-light/40 animate-breathe" style={{ animationDelay: '1s' }} />
-
-            {/* Center focus point */}
             <div className="relative">
               <div className="absolute inset-0 w-8 h-8 rounded-full bg-primary/30 blur-xl animate-pulse" />
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary-dark shadow-large shadow-primary/50 animate-gentle-pulse" />
             </div>
           </div>
 
-          {/* Timer */}
           <p className="text-6xl font-bold text-gradient mb-12">
             {formatTime(timeLeft)}
           </p>
 
-          {/* Controls */}
           <button
             onClick={handleReset}
             className="px-8 py-4 border-2 border-border text-text-secondary rounded-2xl font-medium hover:border-primary/30 hover:bg-background-alt transition-all duration-300"

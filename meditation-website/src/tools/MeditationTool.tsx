@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { usePracticeStats } from '../hooks/usePracticeStats'
+import CompletionScreen from '../components/CompletionScreen'
 
 type Theme = 'mindfulness' | 'lovingKindness' | 'sleep'
 
@@ -8,12 +10,14 @@ const durations = [5, 10, 15, 20]
 
 export default function MeditationTool() {
   const { t } = useTranslation('tools')
+  const { addRecord } = usePracticeStats()
   const [theme, setTheme] = useState<Theme>('mindfulness')
   const [duration, setDuration] = useState(10)
   const [isActive, setIsActive] = useState(false)
   const [timeLeft, setTimeLeft] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
   const intervalRef = useRef<number | null>(null)
+  const recordedRef = useRef(false)
 
   const totalDurationSeconds = duration * 60
 
@@ -38,10 +42,18 @@ export default function MeditationTool() {
     }
   }, [isActive, timeLeft])
 
+  useEffect(() => {
+    if (isComplete && !recordedRef.current) {
+      recordedRef.current = true
+      addRecord('meditation', totalDurationSeconds)
+    }
+  }, [isComplete])
+
   const handleStart = () => {
     setTimeLeft(totalDurationSeconds)
     setIsActive(true)
     setIsComplete(false)
+    recordedRef.current = false
   }
 
   const handlePause = () => {
@@ -52,6 +64,7 @@ export default function MeditationTool() {
     setIsActive(false)
     setTimeLeft(0)
     setIsComplete(false)
+    recordedRef.current = false
   }
 
   const formatTime = (seconds: number): string => {
@@ -62,35 +75,13 @@ export default function MeditationTool() {
 
   if (isComplete) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 animate-fade-in">
-        <div className="text-center">
-          <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-secondary-light to-secondary/30 flex items-center justify-center mx-auto mb-6 shadow-soft animate-scale-in">
-            <svg className="w-12 h-12 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <h2 className="text-3xl font-bold text-gradient mb-3 animate-fade-in-up stagger-1">
-            {t('meditation.complete') || 'Meditation Complete'}
-          </h2>
-          <p className="text-text-secondary text-lg mb-8 animate-fade-in-up stagger-2">
-            {duration} {t('common.minutes') || 'minutes'} {t('common.of') || 'of'} {t(`meditation.themes.${theme}`)}
-          </p>
-          <div className="flex gap-4 justify-center animate-fade-in-up stagger-3">
-            <button
-              onClick={handleReset}
-              className="px-8 py-4 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:scale-105"
-            >
-              {t('common.start')}
-            </button>
-            <Link
-              to="/tools"
-              className="px-8 py-4 border-2 border-primary/20 text-primary rounded-2xl font-medium hover:border-primary/40 hover:bg-primary/5 transition-all duration-300"
-            >
-              {t('common.back')}
-            </Link>
-          </div>
-        </div>
-      </div>
+      <CompletionScreen
+        toolName="meditation"
+        duration={totalDurationSeconds}
+        onRestart={handleReset}
+        completeTitleKey="meditation.complete"
+        completeMessage={`${duration} ${t('common.minutes') || 'minutes'} ${t('common.of') || 'of'} ${t(`meditation.themes.${theme}`)}`}
+      />
     )
   }
 
@@ -108,7 +99,6 @@ export default function MeditationTool() {
           <h1 className="text-3xl font-bold text-gradient mb-3">{t('meditation.title')}</h1>
           <p className="text-text-secondary mb-8 leading-relaxed">{t('meditation.desc')}</p>
 
-          {/* Theme Selection */}
           <div className="mb-8">
             <label className="block text-sm font-semibold text-text mb-4">
               {t('meditation.selectTheme') || 'Select Theme'}
@@ -133,7 +123,6 @@ export default function MeditationTool() {
             </div>
           </div>
 
-          {/* Duration Selection */}
           <div className="mb-8">
             <label className="block text-sm font-semibold text-text mb-4">
               {t('timer.setDuration')}
@@ -164,14 +153,10 @@ export default function MeditationTool() {
         </div>
       ) : (
         <div className="text-center animate-fade-in">
-          {/* Visual */}
           <div className="relative w-64 h-64 mx-auto mb-12">
-            {/* Animated rings */}
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary-light/30 to-accent-light/30 animate-breathe" />
             <div className="absolute inset-6 rounded-full bg-gradient-to-br from-primary/40 to-accent/40 animate-breathe" style={{ animationDelay: '0.5s' }} />
             <div className="absolute inset-12 rounded-full bg-gradient-to-br from-primary-light to-primary shadow-large" />
-
-            {/* Center icon */}
             <div className="absolute inset-0 flex items-center justify-center">
               <svg className="w-20 h-20 text-white animate-gentle-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
@@ -183,12 +168,10 @@ export default function MeditationTool() {
             {t(`meditation.themes.${theme}`)}
           </p>
 
-          {/* Timer */}
           <p className="text-6xl font-bold text-gradient mb-12">
             {formatTime(timeLeft)}
           </p>
 
-          {/* Controls */}
           <div className="flex gap-4 justify-center">
             <button
               onClick={handlePause}

@@ -1,0 +1,13 @@
+{
+  "title": "Profile",
+  "loginRequired": "Please log in to view your profile",
+  "logout": "Log out",
+  "total": "total",
+  "nextLevel": "Next",
+  "todayPractice": "Today",
+  "weekPractice": "This Week",
+  "monthPractice": "This Month",
+  "streak": "Streak",
+  "days": "days",
+  "totalSessions": "Total Sessions"
+}

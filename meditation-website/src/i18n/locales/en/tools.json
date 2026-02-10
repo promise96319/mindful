@@ -27,13 +27,17 @@
     "title": "Focus Training",
     "desc": "Gaze at the center of the screen to train your attention",
     "instruction": "Focus your attention on the center point",
-    "duration": "Duration"
+    "duration": "Duration",
+    "complete": "Practice Complete",
+    "completeMsg": "Great focus session!"
   },
   "relaxation": {
     "title": "Relaxation Practice",
     "desc": "Follow guided body scan and muscle relaxation exercises",
     "bodyScan": "Body Scan",
-    "muscleRelax": "Progressive Muscle Relaxation"
+    "muscleRelax": "Progressive Muscle Relaxation",
+    "complete": "Practice Complete",
+    "completeMsg": "Your body is now relaxed"
   },
   "meditation": {
     "title": "Guided Meditation",
@@ -42,7 +46,8 @@
       "mindfulness": "Mindfulness Meditation",
       "lovingKindness": "Loving-Kindness Meditation",
       "sleep": "Sleep Meditation"
-    }
+    },
+    "complete": "Meditation Complete"
   },
   "timer": {
     "title": "Meditation Timer",
@@ -51,7 +56,9 @@
     "minutes": "minutes",
     "bellStart": "Start Bell",
     "bellEnd": "End Bell",
-    "bellInterval": "Interval Bell"
+    "bellInterval": "Interval Bell",
+    "complete": "Session Complete",
+    "session": "meditation"
   },
   "ambient": {
     "title": "Ambient Sounds",
@@ -67,11 +74,60 @@
       "whiteNoise": "White Noise"
     }
   },
+  "bodyScan": {
+    "title": "Body Scan",
+    "desc": "Guided body awareness scan from head to toe",
+    "speeds": {
+      "quick": "Quick (5 min)",
+      "standard": "Standard (15 min)",
+      "deep": "Deep (25 min)"
+    },
+    "parts": {
+      "headFace": "Head & Face",
+      "neckShoulders": "Neck & Shoulders",
+      "armsHands": "Arms & Hands",
+      "chestUpperBack": "Chest & Upper Back",
+      "abdomenLowerBack": "Abdomen & Lower Back",
+      "hipsPelvis": "Hips & Pelvis",
+      "legsFeet": "Legs & Feet"
+    },
+    "guidance": "Bring your attention to this area. Notice any sensations without judgment.",
+    "complete": "Body Scan Complete"
+  },
+  "musicLibrary": {
+    "title": "Music Library",
+    "desc": "Browse and play meditation music to enhance your practice",
+    "categories": {
+      "nature": "Nature",
+      "ambient": "Ambient",
+      "meditation": "Meditation",
+      "sleep": "Sleep"
+    },
+    "nowPlaying": "Now Playing",
+    "loop": "Loop",
+    "audioNote": "Audio files coming soon. This is a preview of the interface."
+  },
+  "visualization": {
+    "title": "Visualization",
+    "desc": "Immerse yourself in calming visual scenes for meditation",
+    "scenes": {
+      "mandala": "Mandala",
+      "starfield": "Starfield",
+      "waterRipple": "Water Ripple"
+    },
+    "complete": "Visualization Complete",
+    "fullscreen": "Enter Fullscreen"
+  },
   "common": {
     "start": "Start",
     "pause": "Pause",
     "stop": "Stop",
     "reset": "Reset",
-    "back": "Back"
+    "back": "Back",
+    "complete": "Complete",
+    "next": "Next",
+    "writeJournal": "Write Journal",
+    "minutes": "minutes",
+    "of": "of"
   }
 }

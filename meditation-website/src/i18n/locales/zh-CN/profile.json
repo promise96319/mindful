@@ -1,0 +1,13 @@
+{
+  "title": "个人中心",
+  "loginRequired": "请登录后查看个人资料",
+  "logout": "退出登录",
+  "total": "累计",
+  "nextLevel": "下一级",
+  "todayPractice": "今日练习",
+  "weekPractice": "本周练习",
+  "monthPractice": "本月练习",
+  "streak": "连续天数",
+  "days": "天",
+  "totalSessions": "总练习次数"
+}

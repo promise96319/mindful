@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { usePracticeStats } from '../hooks/usePracticeStats'
+import CompletionScreen from '../components/CompletionScreen'
 
 type RelaxMode = 'bodyScan' | 'muscleRelax'
 
@@ -12,15 +14,38 @@ const bodyParts = [
 
 export default function RelaxationTool() {
   const { t } = useTranslation('tools')
+  const { addRecord } = usePracticeStats()
   const [mode, setMode] = useState<RelaxMode>('bodyScan')
   const [isActive, setIsActive] = useState(false)
   const [currentPart, setCurrentPart] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
+  const startTimeRef = useRef<number>(0)
+  const [elapsedTime, setElapsedTime] = useState(0)
+  const recordedRef = useRef(false)
+
+  useEffect(() => {
+    if (isActive) {
+      const timer = window.setInterval(() => {
+        setElapsedTime(Math.floor((Date.now() - startTimeRef.current) / 1000))
+      }, 1000)
+      return () => clearInterval(timer)
+    }
+  }, [isActive])
+
+  useEffect(() => {
+    if (isComplete && !recordedRef.current) {
+      recordedRef.current = true
+      addRecord('relaxation', elapsedTime)
+    }
+  }, [isComplete])
 
   const handleStart = () => {
     setIsActive(true)
     setCurrentPart(0)
     setIsComplete(false)
+    startTimeRef.current = Date.now()
+    setElapsedTime(0)
+    recordedRef.current = false
   }
 
   const handleNext = () => {
@@ -36,39 +61,19 @@ export default function RelaxationTool() {
     setIsActive(false)
     setCurrentPart(0)
     setIsComplete(false)
+    setElapsedTime(0)
+    recordedRef.current = false
   }
 
   if (isComplete) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 animate-fade-in">
-        <div className="text-center">
-          <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-secondary-light to-secondary/30 flex items-center justify-center mx-auto mb-6 shadow-soft animate-scale-in">
-            <svg className="w-12 h-12 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <h2 className="text-3xl font-bold text-gradient mb-3 animate-fade-in-up stagger-1">
-            {t('relaxation.complete') || 'Practice Complete'}
-          </h2>
-          <p className="text-text-secondary text-lg mb-8 animate-fade-in-up stagger-2">
-            {t('relaxation.completeMsg') || 'Your body is now relaxed'}
-          </p>
-          <div className="flex gap-4 justify-center animate-fade-in-up stagger-3">
-            <button
-              onClick={handleReset}
-              className="px-8 py-4 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:scale-105"
-            >
-              {t('common.start')}
-            </button>
-            <Link
-              to="/tools"
-              className="px-8 py-4 border-2 border-primary/20 text-primary rounded-2xl font-medium hover:border-primary/40 hover:bg-primary/5 transition-all duration-300"
-            >
-              {t('common.back')}
-            </Link>
-          </div>
-        </div>
-      </div>
+      <CompletionScreen
+        toolName="relaxation"
+        duration={elapsedTime}
+        onRestart={handleReset}
+        completeTitleKey="relaxation.complete"
+        completeMessage={t('relaxation.completeMsg') || 'Your body is now relaxed'}
+      />
     )
   }
 
@@ -86,7 +91,6 @@ export default function RelaxationTool() {
           <h1 className="text-3xl font-bold text-gradient mb-3">{t('relaxation.title')}</h1>
           <p className="text-text-secondary mb-8 leading-relaxed">{t('relaxation.desc')}</p>
 
-          {/* Mode Selection */}
           <div className="mb-8">
             <label className="block text-sm font-semibold text-text mb-4">
               {t('relaxation.selectMode') || 'Select Mode'}

@@ -1,11 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { usePracticeStats } from '../hooks/usePracticeStats'
+import CompletionScreen from '../components/CompletionScreen'
 
 const presetDurations = [5, 10, 15, 20, 30]
 
 export default function TimerTool() {
   const { t } = useTranslation('tools')
+  const { addRecord } = usePracticeStats()
   const [duration, setDuration] = useState(10)
   const [customDuration, setCustomDuration] = useState('')
   const [isActive, setIsActive] = useState(false)
@@ -13,6 +16,7 @@ export default function TimerTool() {
   const [timeLeft, setTimeLeft] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
   const intervalRef = useRef<number | null>(null)
+  const recordedRef = useRef(false)
 
   const totalDurationSeconds = duration * 60
 
@@ -37,6 +41,13 @@ export default function TimerTool() {
     }
   }, [isActive, isPaused, timeLeft])
 
+  useEffect(() => {
+    if (isComplete && !recordedRef.current) {
+      recordedRef.current = true
+      addRecord('timer', totalDurationSeconds)
+    }
+  }, [isComplete])
+
   const handleStart = () => {
     const mins = customDuration ? parseInt(customDuration) : duration
     if (mins > 0) {
@@ -45,6 +56,7 @@ export default function TimerTool() {
       setIsActive(true)
       setIsPaused(false)
       setIsComplete(false)
+      recordedRef.current = false
     }
   }
 
@@ -57,6 +69,7 @@ export default function TimerTool() {
     setIsPaused(false)
     setTimeLeft(0)
     setIsComplete(false)
+    recordedRef.current = false
   }
 
   const formatTime = (seconds: number): string => {
@@ -71,35 +84,13 @@ export default function TimerTool() {
 
   if (isComplete) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 animate-fade-in">
-        <div className="text-center">
-          <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-secondary-light to-secondary/30 flex items-center justify-center mx-auto mb-6 shadow-soft animate-scale-in">
-            <svg className="w-12 h-12 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <h2 className="text-3xl font-bold text-gradient mb-3 animate-fade-in-up stagger-1">
-            {t('timer.complete') || 'Session Complete'}
-          </h2>
-          <p className="text-text-secondary text-lg mb-8 animate-fade-in-up stagger-2">
-            {duration} {t('timer.minutes')} {t('timer.session') || 'meditation'}
-          </p>
-          <div className="flex gap-4 justify-center animate-fade-in-up stagger-3">
-            <button
-              onClick={handleReset}
-              className="px-8 py-4 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:scale-105"
-            >
-              {t('common.start')}
-            </button>
-            <Link
-              to="/tools"
-              className="px-8 py-4 border-2 border-primary/20 text-primary rounded-2xl font-medium hover:border-primary/40 hover:bg-primary/5 transition-all duration-300"
-            >
-              {t('common.back')}
-            </Link>
-          </div>
-        </div>
-      </div>
+      <CompletionScreen
+        toolName="timer"
+        duration={totalDurationSeconds}
+        onRestart={handleReset}
+        completeTitleKey="timer.complete"
+        completeMessage={`${duration} ${t('timer.minutes')} ${t('timer.session') || 'meditation'}`}
+      />
     )
   }
 
@@ -117,7 +108,6 @@ export default function TimerTool() {
           <h1 className="text-3xl font-bold text-gradient mb-3">{t('timer.title')}</h1>
           <p className="text-text-secondary mb-8 leading-relaxed">{t('timer.desc')}</p>
 
-          {/* Preset Duration Selection */}
           <div className="mb-6">
             <label className="block text-sm font-semibold text-text mb-4">
               {t('timer.setDuration')}
@@ -142,7 +132,6 @@ export default function TimerTool() {
             </div>
           </div>
 
-          {/* Custom Duration */}
           <div className="mb-8">
             <label className="block text-sm font-semibold text-text mb-4">
               {t('timer.custom') || 'Custom'} ({t('timer.minutes')})
@@ -167,9 +156,7 @@ export default function TimerTool() {
         </div>
       ) : (
         <div className="text-center animate-fade-in">
-          {/* Circular Progress */}
           <div className="relative w-80 h-80 mx-auto mb-12">
-            {/* Background circle */}
             <svg className="w-full h-full transform -rotate-90">
               <circle
                 cx="160"
@@ -199,7 +186,6 @@ export default function TimerTool() {
               </defs>
             </svg>
 
-            {/* Center content */}
             <div className="absolute inset-0 flex flex-col items-center justify-center">
               <span className="text-6xl font-bold text-gradient mb-2">
                 {formatTime(timeLeft)}
@@ -210,7 +196,6 @@ export default function TimerTool() {
             </div>
           </div>
 
-          {/* Controls */}
           <div className="flex gap-4 justify-center">
             <button
               onClick={handlePause}

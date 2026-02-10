@@ -1,4 +1,7 @@
+import { useState, useEffect, useCallback } from 'react'
 import { useLocalStorage } from './useLocalStorage'
+import { useAuth } from './useAuth'
+import { addPracticeRecord, getPracticeRecords } from '../services/firestoreService'
 
 export interface PracticeRecord {
   date: string
@@ -15,18 +18,44 @@ export interface PracticeStats {
 }
 
 export function usePracticeStats() {
-  const [records, setRecords] = useLocalStorage<PracticeRecord[]>('practiceHistory', [])
+  const { user } = useAuth()
+  const [localRecords, setLocalRecords] = useLocalStorage<PracticeRecord[]>('practiceHistory', [])
+  const [cloudRecords, setCloudRecords] = useState<PracticeRecord[]>([])
+  const [cloudLoaded, setCloudLoaded] = useState(false)
 
-  const addRecord = (tool: string, duration: number) => {
+  // Load cloud records when user is logged in
+  useEffect(() => {
+    if (!user) {
+      setCloudRecords([])
+      setCloudLoaded(false)
+      return
+    }
+    getPracticeRecords(user.uid).then((records) => {
+      setCloudRecords(records.map((r) => ({ date: r.date, tool: r.tool, duration: r.duration })))
+      setCloudLoaded(true)
+    }).catch(() => setCloudLoaded(true))
+  }, [user])
+
+  const records = user && cloudLoaded ? cloudRecords : localRecords
+
+  const addRecord = useCallback(async (tool: string, duration: number) => {
     const newRecord: PracticeRecord = {
       date: new Date().toISOString().split('T')[0],
       tool,
       duration,
     }
-    setRecords((prev) => [...prev, newRecord])
-  }
 
-  const getStats = (): PracticeStats => {
+    if (user) {
+      await addPracticeRecord(user.uid, tool, duration)
+      // Refresh cloud records
+      const updated = await getPracticeRecords(user.uid)
+      setCloudRecords(updated.map((r) => ({ date: r.date, tool: r.tool, duration: r.duration })))
+    } else {
+      setLocalRecords((prev) => [...prev, newRecord])
+    }
+  }, [user, setLocalRecords])
+
+  const getStats = useCallback((): PracticeStats => {
     const today = new Date().toISOString().split('T')[0]
     const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
     const monthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
@@ -46,7 +75,7 @@ export function usePracticeStats() {
     // Calculate streak
     const uniqueDates = [...new Set(records.map((r) => r.date))].sort().reverse()
     let streak = 0
-    let checkDate = new Date()
+    const checkDate = new Date()
 
     for (const date of uniqueDates) {
       const expectedDate = checkDate.toISOString().split('T')[0]
@@ -54,7 +83,6 @@ export function usePracticeStats() {
         streak++
         checkDate.setDate(checkDate.getDate() - 1)
       } else if (date < expectedDate) {
-        // Check if it was yesterday (for ongoing streaks)
         checkDate.setDate(checkDate.getDate() - 1)
         if (date === checkDate.toISOString().split('T')[0]) {
           streak++
@@ -72,15 +100,15 @@ export function usePracticeStats() {
       streak,
       totalSessions: records.length,
     }
-  }
+  }, [records])
 
-  const getRecentRecords = (limit = 10): PracticeRecord[] => {
+  const getRecentRecords = useCallback((limit = 10): PracticeRecord[] => {
     return [...records].reverse().slice(0, limit)
-  }
+  }, [records])
 
-  const clearRecords = () => {
-    setRecords([])
-  }
+  const clearRecords = useCallback(() => {
+    setLocalRecords([])
+  }, [setLocalRecords])
 
   return {
     records,

@@ -5,11 +5,15 @@ import zhCNCommon from './locales/zh-CN/common.json'
 import zhCNHome from './locales/zh-CN/home.json'
 import zhCNLearn from './locales/zh-CN/learn.json'
 import zhCNTools from './locales/zh-CN/tools.json'
+import zhCNJournal from './locales/zh-CN/journal.json'
+import zhCNProfile from './locales/zh-CN/profile.json'
 
 import enCommon from './locales/en/common.json'
 import enHome from './locales/en/home.json'
 import enLearn from './locales/en/learn.json'
 import enTools from './locales/en/tools.json'
+import enJournal from './locales/en/journal.json'
+import enProfile from './locales/en/profile.json'
 
 const savedLanguage = localStorage.getItem('language')
 const browserLanguage = navigator.language
@@ -27,17 +31,21 @@ i18n.use(initReactI18next).init({
       home: zhCNHome,
       learn: zhCNLearn,
       tools: zhCNTools,
+      journal: zhCNJournal,
+      profile: zhCNProfile,
     },
     en: {
       common: enCommon,
       home: enHome,
       learn: enLearn,
       tools: enTools,
+      journal: enJournal,
+      profile: enProfile,
     },
   },
   lng: getInitialLanguage(),
   fallbackLng: 'en',
-  ns: ['common', 'home', 'learn', 'tools'],
+  ns: ['common', 'home', 'learn', 'tools', 'journal', 'profile'],
   defaultNS: 'common',
   interpolation: {
     escapeValue: false,

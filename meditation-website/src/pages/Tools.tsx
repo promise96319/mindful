@@ -1,6 +1,6 @@
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { WindIcon, EyeIcon, HeartIcon, SunIcon, ClockIcon, SpeakerWaveIcon, WrenchIcon, ChevronRightIcon } from '../components/icons'
+import { WindIcon, EyeIcon, HeartIcon, SunIcon, ClockIcon, SpeakerWaveIcon, WrenchIcon, ChevronRightIcon, TargetIcon, MusicNoteIcon, SparklesIcon } from '../components/icons'
 import type { ReactNode } from 'react'
 
 interface Tool {
@@ -65,6 +65,30 @@ export default function Tools() {
       descKey: 'ambient.desc',
       gradient: 'from-green-500 to-emerald-500',
       bgGradient: 'from-green-500/5 to-emerald-500/5',
+    },
+    {
+      path: 'body-scan',
+      icon: <TargetIcon className="w-7 h-7" />,
+      titleKey: 'bodyScan.title',
+      descKey: 'bodyScan.desc',
+      gradient: 'from-rose-500 to-pink-500',
+      bgGradient: 'from-rose-500/5 to-pink-500/5',
+    },
+    {
+      path: 'music-library',
+      icon: <MusicNoteIcon className="w-7 h-7" />,
+      titleKey: 'musicLibrary.title',
+      descKey: 'musicLibrary.desc',
+      gradient: 'from-indigo-500 to-blue-600',
+      bgGradient: 'from-indigo-500/5 to-blue-600/5',
+    },
+    {
+      path: 'visualization',
+      icon: <SparklesIcon className="w-7 h-7" />,
+      titleKey: 'visualization.title',
+      descKey: 'visualization.desc',
+      gradient: 'from-fuchsia-500 to-purple-600',
+      bgGradient: 'from-fuchsia-500/5 to-purple-600/5',
     },
   ]
 

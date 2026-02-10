@@ -3,7 +3,11 @@
   "nav": {
     "learn": "Learn",
     "tools": "Practice",
-    "about": "About"
+    "about": "About",
+    "journal": "Journal",
+    "profile": "Profile",
+    "login": "Log in",
+    "logout": "Log out"
   },
   "about": {
     "title": "About Mindful",

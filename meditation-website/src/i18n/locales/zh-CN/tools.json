@@ -27,13 +27,17 @@
     "title": "专注训练",
     "desc": "凝视屏幕中心，训练你的注意力",
     "instruction": "将注意力集中在中心的光点上",
-    "duration": "练习时长"
+    "duration": "练习时长",
+    "complete": "练习完成",
+    "completeMsg": "专注训练完成！"
   },
   "relaxation": {
     "title": "放松练习",
     "desc": "跟随引导进行身体扫描和肌肉放松",
     "bodyScan": "身体扫描",
-    "muscleRelax": "渐进式肌肉放松"
+    "muscleRelax": "渐进式肌肉放松",
+    "complete": "练习完成",
+    "completeMsg": "你的身体已经放松了"
   },
   "meditation": {
     "title": "冥想引导",
@@ -42,7 +46,8 @@
       "mindfulness": "正念冥想",
       "lovingKindness": "慈悲冥想",
       "sleep": "睡前冥想"
-    }
+    },
+    "complete": "冥想完成"
   },
   "timer": {
     "title": "冥想计时器",
@@ -51,7 +56,9 @@
     "minutes": "分钟",
     "bellStart": "开始铃声",
     "bellEnd": "结束铃声",
-    "bellInterval": "间隔提醒"
+    "bellInterval": "间隔提醒",
+    "complete": "计时完成",
+    "session": "冥想"
   },
   "ambient": {
     "title": "环境音",
@@ -67,11 +74,60 @@
       "whiteNoise": "白噪音"
     }
   },
+  "bodyScan": {
+    "title": "身体扫描",
+    "desc": "从头到脚的引导式身体觉察扫描",
+    "speeds": {
+      "quick": "快速 (5分钟)",
+      "standard": "标准 (15分钟)",
+      "deep": "深度 (25分钟)"
+    },
+    "parts": {
+      "headFace": "头部与面部",
+      "neckShoulders": "颈部与肩膀",
+      "armsHands": "手臂与双手",
+      "chestUpperBack": "胸部与上背",
+      "abdomenLowerBack": "腹部与下背",
+      "hipsPelvis": "髋部与骨盆",
+      "legsFeet": "双腿与双脚"
+    },
+    "guidance": "将注意力带到这个区域，觉察任何感觉，不做评判。",
+    "complete": "身体扫描完成"
+  },
+  "musicLibrary": {
+    "title": "冥想音乐",
+    "desc": "浏览并播放冥想音乐，提升你的练习体验",
+    "categories": {
+      "nature": "自然",
+      "ambient": "氛围",
+      "meditation": "冥想",
+      "sleep": "助眠"
+    },
+    "nowPlaying": "正在播放",
+    "loop": "循环",
+    "audioNote": "音频文件即将上线，这是界面预览。"
+  },
+  "visualization": {
+    "title": "可视化冥想",
+    "desc": "沉浸在宁静的视觉场景中进行冥想",
+    "scenes": {
+      "mandala": "曼陀罗",
+      "starfield": "星空",
+      "waterRipple": "水波涟漪"
+    },
+    "complete": "可视化冥想完成",
+    "fullscreen": "进入全屏"
+  },
   "common": {
     "start": "开始",
     "pause": "暂停",
     "stop": "停止",
     "reset": "重置",
-    "back": "返回"
+    "back": "返回",
+    "complete": "完成",
+    "next": "下一个",
+    "writeJournal": "写日记",
+    "minutes": "分钟",
+    "of": "的"
   }
 }

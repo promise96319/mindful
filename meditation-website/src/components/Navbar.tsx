@@ -1,12 +1,16 @@
 import { Link, NavLink } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import ThemeToggle from './ThemeToggle'
+import { useAuth } from '../hooks/useAuth'
 
 export default function Navbar() {
   const { t, i18n } = useTranslation('common')
+  const { user, signInWithGoogle, signOut } = useAuth()
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const userMenuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -14,6 +18,16 @@ export default function Navbar() {
     }
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setUserMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
   const toggleLanguage = () => {
@@ -63,14 +77,16 @@ export default function Navbar() {
           <NavLink to="/tools" className={navLinkClass}>
             {t('nav.tools')}
           </NavLink>
+          <NavLink to="/journal" className={navLinkClass}>
+            {t('nav.journal', { defaultValue: 'Journal' })}
+          </NavLink>
           <NavLink to="/about" className={navLinkClass}>
             {t('nav.about')}
           </NavLink>
         </div>
 
-        {/* Theme & Language Toggle */}
+        {/* Theme & Language & Auth */}
         <div className="flex items-center gap-2">
-          {/* Theme Toggle */}
           <ThemeToggle />
 
           {/* Language Toggle */}
@@ -82,6 +98,58 @@ export default function Navbar() {
               {i18n.language === 'zh-CN' ? 'EN' : '中文'}
             </span>
           </button>
+
+          {/* Auth */}
+          {user ? (
+            <div className="relative" ref={userMenuRef}>
+              <button
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
+                className="flex items-center gap-2 p-1 rounded-full hover:bg-primary/5 transition-all duration-300"
+              >
+                {user.photoURL ? (
+                  <img src={user.photoURL} alt="" className="w-8 h-8 rounded-full object-cover" />
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+                    <span className="text-xs text-white font-bold">{user.displayName?.[0] || '?'}</span>
+                  </div>
+                )}
+              </button>
+
+              {/* Dropdown */}
+              {userMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-card rounded-2xl border border-border-light shadow-large py-2 animate-scale-in z-50">
+                  <Link
+                    to="/profile"
+                    onClick={() => setUserMenuOpen(false)}
+                    className="block px-4 py-2.5 text-sm text-text hover:text-primary hover:bg-primary/5 transition-colors"
+                  >
+                    {t('nav.profile', { defaultValue: 'Profile' })}
+                  </Link>
+                  <Link
+                    to="/journal"
+                    onClick={() => setUserMenuOpen(false)}
+                    className="block px-4 py-2.5 text-sm text-text hover:text-primary hover:bg-primary/5 transition-colors"
+                  >
+                    {t('nav.journal', { defaultValue: 'Journal' })}
+                  </Link>
+                  <hr className="my-1 border-border-light" />
+                  <button
+                    onClick={() => { signOut(); setUserMenuOpen(false) }}
+                    className="w-full text-left px-4 py-2.5 text-sm text-red-500 hover:bg-red-500/5 transition-colors"
+                  >
+                    {t('nav.logout', { defaultValue: 'Log out' })}
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button
+              onClick={signInWithGoogle}
+              className="px-4 py-2 rounded-full text-sm font-medium bg-gradient-to-r from-primary to-primary-dark text-white shadow-soft hover:shadow-medium transition-all duration-300 hover:scale-105"
+            >
+              {t('nav.login', { defaultValue: 'Log in' })}
+            </button>
+          )}
 
           {/* Mobile Menu Button */}
           <button
@@ -102,7 +170,7 @@ export default function Navbar() {
       {/* Mobile Menu */}
       <div
         className={`md:hidden overflow-hidden transition-all duration-500 ease-out ${
-          mobileMenuOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'
+          mobileMenuOpen ? 'max-h-80 opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
         <div className="px-6 pb-6 pt-2 space-y-2 bg-background-warm/95 backdrop-blur-lg border-b border-border-light">
@@ -131,6 +199,19 @@ export default function Navbar() {
             }
           >
             {t('nav.tools')}
+          </NavLink>
+          <NavLink
+            to="/journal"
+            onClick={() => setMobileMenuOpen(false)}
+            className={({ isActive }) =>
+              `block px-4 py-3 rounded-xl text-base font-medium transition-all duration-300 ${
+                isActive
+                  ? 'text-primary bg-primary/10'
+                  : 'text-text-secondary hover:text-primary hover:bg-primary/5'
+              }`
+            }
+          >
+            {t('nav.journal', { defaultValue: 'Journal' })}
           </NavLink>
           <NavLink
             to="/about"
