@@ -11,7 +11,16 @@
       "Bash(nvm use:*)",
       "Bash(npx skills:*)",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git pull:*)",
+      "Bash(node --version:*)",
+      "Bash(nvm list:*)",
+      "Bash(nvm alias:*)",
+      "Bash(nvm current:*)",
+      "Bash(git -C /home/qinguanghui/github/mindful log --oneline -5)",
+      "Bash(wc:*)",
+      "Bash(npx tsc:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
