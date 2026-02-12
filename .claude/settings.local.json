@@ -20,7 +20,17 @@
       "Bash(git -C /home/qinguanghui/github/mindful log --oneline -5)",
       "Bash(wc:*)",
       "Bash(npx tsc:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(firebase:*)",
+      "Bash(npx @nestjs/cli new:*)",
+      "Bash(mongosh:*)",
+      "Bash(mongod:*)",
+      "Bash(brew services:*)",
+      "Bash(npm run start:dev:*)",
+      "Bash(curl:*)",
+      "Bash(lsof:*)",
+      "Bash(kill:*)",
+      "Bash(git push)"
     ]
   }
 }

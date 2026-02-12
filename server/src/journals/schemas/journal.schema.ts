@@ -11,7 +11,7 @@ export class Journal {
   @Prop({ required: true })
   date: string;
 
-  @Prop({ required: true })
+  @Prop({ default: '' })
   toolUsed: string;
 
   @Prop({ required: true })

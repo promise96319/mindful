@@ -13,6 +13,7 @@ export class CreateJournalDto {
   date: string;
 
   @IsString()
+  @IsOptional()
   toolUsed: string;
 
   @IsNumber()
