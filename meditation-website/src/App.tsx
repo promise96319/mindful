@@ -18,6 +18,7 @@ import Journal from './pages/Journal'
 import JournalNew from './pages/JournalNew'
 import JournalDetail from './pages/JournalDetail'
 import Profile from './pages/Profile'
+import AuthCallback from './pages/AuthCallback'
 
 export default function App() {
   return (
@@ -44,6 +45,7 @@ export default function App() {
           <Route path="journal/:id" element={<JournalDetail />} />
           <Route path="profile" element={<Profile />} />
           <Route path="about" element={<About />} />
+          <Route path="auth/callback" element={<AuthCallback />} />
         </Route>
       </Routes>
     </BrowserRouter>

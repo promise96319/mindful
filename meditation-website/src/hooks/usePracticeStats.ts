@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useLocalStorage } from './useLocalStorage'
 import { useAuth } from './useAuth'
-import { addPracticeRecord, getPracticeRecords } from '../services/firestoreService'
+import {
+  addPracticeRecord as apiAddPracticeRecord,
+  getPracticeRecords,
+} from '../services/apiService'
 
 export interface PracticeRecord {
   date: string
@@ -18,8 +20,7 @@ export interface PracticeStats {
 }
 
 export function usePracticeStats() {
-  const { user } = useAuth()
-  const [localRecords, setLocalRecords] = useLocalStorage<PracticeRecord[]>('practiceHistory', [])
+  const { user, promptLogin } = useAuth()
   const [cloudRecords, setCloudRecords] = useState<PracticeRecord[]>([])
   const [cloudLoaded, setCloudLoaded] = useState(false)
 
@@ -30,30 +31,23 @@ export function usePracticeStats() {
       setCloudLoaded(false)
       return
     }
-    getPracticeRecords(user.uid).then((records) => {
+    getPracticeRecords().then((records) => {
       setCloudRecords(records.map((r) => ({ date: r.date, tool: r.tool, duration: r.duration })))
       setCloudLoaded(true)
     }).catch(() => setCloudLoaded(true))
   }, [user])
 
-  const records = user && cloudLoaded ? cloudRecords : localRecords
+  const records = user && cloudLoaded ? cloudRecords : []
 
   const addRecord = useCallback(async (tool: string, duration: number) => {
-    const newRecord: PracticeRecord = {
-      date: new Date().toISOString().split('T')[0],
-      tool,
-      duration,
+    if (!user) {
+      promptLogin()
+      return
     }
-
-    if (user) {
-      await addPracticeRecord(user.uid, tool, duration)
-      // Refresh cloud records
-      const updated = await getPracticeRecords(user.uid)
-      setCloudRecords(updated.map((r) => ({ date: r.date, tool: r.tool, duration: r.duration })))
-    } else {
-      setLocalRecords((prev) => [...prev, newRecord])
-    }
-  }, [user, setLocalRecords])
+    await apiAddPracticeRecord(tool, duration)
+    const updated = await getPracticeRecords()
+    setCloudRecords(updated.map((r) => ({ date: r.date, tool: r.tool, duration: r.duration })))
+  }, [user, promptLogin])
 
   const getStats = useCallback((): PracticeStats => {
     const today = new Date().toISOString().split('T')[0]
@@ -106,16 +100,11 @@ export function usePracticeStats() {
     return [...records].reverse().slice(0, limit)
   }, [records])
 
-  const clearRecords = useCallback(() => {
-    setLocalRecords([])
-  }, [setLocalRecords])
-
   return {
     records,
     addRecord,
     getStats,
     getRecentRecords,
-    clearRecords,
   }
 }
 

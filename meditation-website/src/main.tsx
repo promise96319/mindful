@@ -4,11 +4,13 @@ import './i18n'
 import './index.css'
 import App from './App.tsx'
 import { AuthProvider } from './contexts/AuthContext'
+import LoginModal from './components/LoginModal'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider>
       <App />
+      <LoginModal />
     </AuthProvider>
   </StrictMode>,
 )

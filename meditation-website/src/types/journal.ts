@@ -1,5 +1,3 @@
-import type { Timestamp } from 'firebase/firestore'
-
 export interface JournalEntry {
   id?: string
   date: string
@@ -12,8 +10,8 @@ export interface JournalEntry {
   freeText: string
   isPublic: boolean
   isAnonymous: boolean
-  createdAt?: Timestamp | Date
-  updatedAt?: Timestamp | Date
+  createdAt?: string
+  updatedAt?: string
 }
 
 export const BODY_TAGS_ZH = [

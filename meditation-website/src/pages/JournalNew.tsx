@@ -2,23 +2,21 @@ import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../hooks/useAuth'
-import { addJournal } from '../services/firestoreService'
+import { addJournal } from '../services/apiService'
 import JournalForm from '../components/journal/JournalForm'
 import type { JournalEntry } from '../types/journal'
 
 export default function JournalNew() {
   const { t } = useTranslation('journal')
-  const { user } = useAuth()
+  const { user, promptLogin } = useAuth()
   const navigate = useNavigate()
 
   const handleSubmit = async (entry: Omit<JournalEntry, 'id' | 'createdAt' | 'updatedAt'>) => {
-    if (user) {
-      await addJournal(user.uid, entry)
-    } else {
-      const existing = JSON.parse(localStorage.getItem('journals') || '[]')
-      existing.push({ ...entry, id: Date.now().toString(), createdAt: new Date().toISOString() })
-      localStorage.setItem('journals', JSON.stringify(existing))
+    if (!user) {
+      promptLogin()
+      return
     }
+    await addJournal(entry)
     navigate('/journal')
   }
 

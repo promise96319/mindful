@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../hooks/useAuth'
 import { usePracticeStats } from '../hooks/usePracticeStats'
-import { getUserData } from '../services/firestoreService'
+import { getUserData } from '../services/apiService'
 import { getLevel, getLevelProgress, getNextLevel, formatDuration } from '../utils/levelSystem'
 
 export default function Profile() {
@@ -15,10 +15,14 @@ export default function Profile() {
 
   useEffect(() => {
     if (user) {
-      getUserData(user.uid).then((data) => {
+      getUserData().then((data) => {
         if (data?.totalPracticeSeconds) {
           setTotalSeconds(data.totalPracticeSeconds)
         }
+      }).catch(() => {
+        // fallback to local calculation
+        const total = records.reduce((sum, r) => sum + r.duration, 0)
+        setTotalSeconds(total)
       })
     } else {
       const total = records.reduce((sum, r) => sum + r.duration, 0)

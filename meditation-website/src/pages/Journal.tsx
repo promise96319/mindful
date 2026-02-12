@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../hooks/useAuth'
 import { usePracticeStats } from '../hooks/usePracticeStats'
-import { getJournals } from '../services/firestoreService'
+import { getJournals } from '../services/apiService'
 import PracticeHeatmap from '../components/journal/PracticeHeatmap'
 import EmotionCalendar from '../components/journal/EmotionCalendar'
 import { MOOD_ICONS } from '../types/journal'
@@ -11,18 +11,37 @@ import type { JournalEntry } from '../types/journal'
 
 export default function Journal() {
   const { t } = useTranslation('journal')
-  const { user } = useAuth()
+  const { user, loading: authLoading, promptLogin } = useAuth()
   const { records } = usePracticeStats()
   const [journals, setJournals] = useState<(JournalEntry & { id: string })[]>([])
+  const [journalsLoading, setJournalsLoading] = useState(true)
 
-  useEffect(() => {
-    if (user) {
-      getJournals(user.uid).then(setJournals)
-    } else {
-      const local = JSON.parse(localStorage.getItem('journals') || '[]')
-      setJournals(local)
+  const fetchJournals = useCallback(async () => {
+    if (!user) return
+    setJournalsLoading(true)
+    try {
+      const data = await getJournals()
+      setJournals(data)
+    } catch {
+      // ignore
+    } finally {
+      setJournalsLoading(false)
     }
   }, [user])
+
+  useEffect(() => {
+    if (authLoading) return
+
+    if (user) {
+      fetchJournals()
+      // Poll every 30s
+      const interval = setInterval(fetchJournals, 30000)
+      return () => clearInterval(interval)
+    } else {
+      setJournals([])
+      setJournalsLoading(false)
+    }
+  }, [user, authLoading, fetchJournals])
 
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
@@ -41,12 +60,21 @@ export default function Journal() {
             {t('subtitle', { defaultValue: 'Track your meditation journey' })}
           </p>
         </div>
-        <Link
-          to="/journal/new"
-          className="px-6 py-3 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:scale-105"
-        >
-          {t('newEntry', { defaultValue: 'New Entry' })}
-        </Link>
+        {user ? (
+          <Link
+            to="/journal/new"
+            className="px-6 py-3 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:scale-105"
+          >
+            {t('newEntry', { defaultValue: 'New Entry' })}
+          </Link>
+        ) : (
+          <button
+            onClick={promptLogin}
+            className="px-6 py-3 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:scale-105"
+          >
+            {t('newEntry', { defaultValue: 'New Entry' })}
+          </button>
+        )}
       </div>
 
       {/* Heatmap + Calendar */}
@@ -60,7 +88,11 @@ export default function Journal() {
         <h3 className="text-base font-semibold text-text mb-6">
           {t('recentEntries', { defaultValue: 'Recent Entries' })}
         </h3>
-        {journals.length === 0 ? (
+        {(authLoading || journalsLoading) ? (
+          <div className="flex justify-center py-12">
+            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : journals.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-text-secondary text-lg">
               {t('noEntries', { defaultValue: 'No journal entries yet. Complete a practice to get started!' })}

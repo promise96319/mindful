@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../hooks/useAuth'
-import { addJournal } from '../../services/firestoreService'
+import { addJournal } from '../../services/apiService'
 import JournalForm from './JournalForm'
 import type { JournalEntry } from '../../types/journal'
 
@@ -12,17 +12,14 @@ interface JournalPopupProps {
 
 export default function JournalPopup({ toolName, duration, onClose }: JournalPopupProps) {
   const { t } = useTranslation('journal')
-  const { user } = useAuth()
+  const { user, promptLogin } = useAuth()
 
   const handleSubmit = async (entry: Omit<JournalEntry, 'id' | 'createdAt' | 'updatedAt'>) => {
-    if (user) {
-      await addJournal(user.uid, entry)
-    } else {
-      // Store locally for non-logged-in users
-      const existing = JSON.parse(localStorage.getItem('journals') || '[]')
-      existing.push({ ...entry, id: Date.now().toString(), createdAt: new Date().toISOString() })
-      localStorage.setItem('journals', JSON.stringify(existing))
+    if (!user) {
+      promptLogin()
+      return
     }
+    await addJournal(entry)
     onClose()
   }
 

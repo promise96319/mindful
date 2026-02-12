@@ -1,0 +1,15 @@
+{
+  "name": "ccmeditation",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "cd server && npm run start:dev",
+    "dev:client": "cd meditation-website && npm run dev",
+    "build:server": "cd server && npm run build",
+    "build:client": "cd meditation-website && npm run build",
+    "install:all": "cd server && npm install && cd ../meditation-website && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

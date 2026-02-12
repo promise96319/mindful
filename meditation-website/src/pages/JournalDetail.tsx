@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../hooks/useAuth'
-import { getJournal, updateJournal, deleteJournal } from '../services/firestoreService'
+import { getJournal, updateJournal, deleteJournal } from '../services/apiService'
 import JournalForm from '../components/journal/JournalForm'
 import { MOOD_ICONS } from '../types/journal'
 import type { JournalEntry } from '../types/journal'
@@ -10,50 +10,42 @@ import type { JournalEntry } from '../types/journal'
 export default function JournalDetail() {
   const { id } = useParams<{ id: string }>()
   const { t } = useTranslation('journal')
-  const { user } = useAuth()
+  const { user, loading: authLoading, promptLogin } = useAuth()
   const navigate = useNavigate()
   const [journal, setJournal] = useState<(JournalEntry & { id: string }) | null>(null)
   const [editing, setEditing] = useState(false)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!id) return
-    if (user) {
-      getJournal(user.uid, id).then((j) => {
-        setJournal(j)
-        setLoading(false)
-      })
-    } else {
-      const local = JSON.parse(localStorage.getItem('journals') || '[]')
-      const found = local.find((j: JournalEntry & { id: string }) => j.id === id)
-      setJournal(found || null)
+    if (!id || authLoading) return
+    if (!user) {
+      promptLogin()
       setLoading(false)
+      return
     }
-  }, [id, user])
+    getJournal(id).then((j) => {
+      setJournal(j)
+      setLoading(false)
+    }).catch(() => setLoading(false))
+  }, [id, user, authLoading])
 
   const handleUpdate = async (entry: Omit<JournalEntry, 'id' | 'createdAt' | 'updatedAt'>) => {
     if (!id) return
-    if (user) {
-      await updateJournal(user.uid, id, entry)
-    } else {
-      const local = JSON.parse(localStorage.getItem('journals') || '[]')
-      const idx = local.findIndex((j: JournalEntry & { id: string }) => j.id === id)
-      if (idx >= 0) {
-        local[idx] = { ...local[idx], ...entry, updatedAt: new Date().toISOString() }
-        localStorage.setItem('journals', JSON.stringify(local))
-      }
+    if (!user) {
+      promptLogin()
+      return
     }
+    await updateJournal(id, entry)
     navigate('/journal')
   }
 
   const handleDelete = async () => {
     if (!id) return
-    if (user) {
-      await deleteJournal(user.uid, id)
-    } else {
-      const local = JSON.parse(localStorage.getItem('journals') || '[]')
-      localStorage.setItem('journals', JSON.stringify(local.filter((j: JournalEntry & { id: string }) => j.id !== id)))
+    if (!user) {
+      promptLogin()
+      return
     }
+    await deleteJournal(id)
     navigate('/journal')
   }
 
