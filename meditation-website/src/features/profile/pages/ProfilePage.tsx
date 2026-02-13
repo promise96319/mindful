@@ -72,7 +72,7 @@ export default function ProfilePage() {
   // Calculate average focus and mood from journals
   const { avgFocus, avgMood } = useMemo(() => {
     if (journals.length === 0) return { avgFocus: 0, avgMood: 0 }
-    const totalFocus = journals.reduce((sum, j) => sum + j.focus, 0)
+    const totalFocus = journals.reduce((sum, j) => sum + (j.focus || 3), 0)
     const totalMood = journals.reduce((sum, j) => sum + j.mood, 0)
     return {
       avgFocus: totalFocus / journals.length,

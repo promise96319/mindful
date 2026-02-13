@@ -185,7 +185,7 @@ export default function PracticeDurationBarChart({ records }: PracticeDurationBa
 
               {/* Bars */}
               <div className={`relative h-full flex items-end ${getBarSpacing()} pb-2 pt-2`} style={{ zIndex: 1 }}>
-                {chartData.data.map((item, idx) => {
+                {chartData.data.map((item) => {
                   const heightPercent = chartData.maxDuration > 0
                     ? (item.duration / chartData.maxDuration) * 100
                     : 0

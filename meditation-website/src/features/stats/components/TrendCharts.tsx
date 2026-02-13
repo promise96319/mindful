@@ -78,7 +78,7 @@ export default function TrendCharts({ records, journals, startDate, endDate }: T
     filteredJournals.forEach((j) => {
       const current = dailyFocus.get(j.date) || { total: 0, count: 0 }
       dailyFocus.set(j.date, {
-        total: current.total + j.focus,
+        total: current.total + (j.focus || 3),
         count: current.count + 1,
       })
     })
