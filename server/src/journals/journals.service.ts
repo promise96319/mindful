@@ -67,9 +67,22 @@ export class JournalsService {
     await journal.deleteOne();
   }
 
+  async findPublicJournals(
+    limit = 20,
+    offset = 0,
+  ): Promise<JournalDocument[]> {
+    return this.journalModel
+      .find({ isPublic: true })
+      .sort({ createdAt: -1 })
+      .skip(offset)
+      .limit(limit)
+      .populate('userId', 'username avatar')
+      .exec();
+  }
+
   toResponse(doc: JournalDocument) {
     const obj = doc.toObject();
-    return {
+    const response: Record<string, unknown> = {
       id: (obj._id as Types.ObjectId).toString(),
       date: obj.date,
       toolUsed: obj.toolUsed,
@@ -81,8 +94,19 @@ export class JournalsService {
       freeText: obj.freeText,
       isPublic: obj.isPublic,
       isAnonymous: obj.isAnonymous,
+      likeCount: obj.likeCount,
+      commentCount: obj.commentCount,
       createdAt: (obj as unknown as Record<string, unknown>).createdAt,
       updatedAt: (obj as unknown as Record<string, unknown>).updatedAt,
     };
+
+    // Include user info if populated
+    if (obj.userId && typeof obj.userId === 'object') {
+      response.user = obj.userId;
+    } else {
+      response.userId = (obj.userId as Types.ObjectId).toString();
+    }
+
+    return response;
   }
 }

@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { JournalsService } from './journals.service';
 import { CreateJournalDto, UpdateJournalDto } from './dto';
-import { CurrentUser } from '../common/decorators';
+import { CurrentUser, Public } from '../common/decorators';
 
 @Controller('api/journals')
 export class JournalsController {
@@ -33,6 +33,19 @@ export class JournalsController {
     const journals = await this.journalsService.findAllByUser(
       userId,
       limit ? parseInt(limit, 10) : 50,
+    );
+    return journals.map((j) => this.journalsService.toResponse(j));
+  }
+
+  @Public()
+  @Get('public')
+  async findPublic(
+    @Query('limit') limit?: string,
+    @Query('offset') offset?: string,
+  ) {
+    const journals = await this.journalsService.findPublicJournals(
+      limit ? parseInt(limit, 10) : 20,
+      offset ? parseInt(offset, 10) : 0,
     );
     return journals.map((j) => this.journalsService.toResponse(j));
   }
