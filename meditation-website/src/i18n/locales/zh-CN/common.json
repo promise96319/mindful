@@ -9,6 +9,8 @@
     "login": "登录",
     "logout": "退出登录"
   },
+  "exitFullscreen": "按 ESC 退出全屏",
+  "enterFullscreen": "进入全屏",
   "about": {
     "title": "关于静心",
     "mission": {

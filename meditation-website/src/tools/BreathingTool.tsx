@@ -27,6 +27,7 @@ export default function BreathingTool() {
   const [phaseTime, setPhaseTime] = useState(0)
   const [totalTime, setTotalTime] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
+  const [shouldEnterFullscreen, setShouldEnterFullscreen] = useState(false)
   const intervalRef = useRef<number | null>(null)
   const recordedRef = useRef(false)
 
@@ -112,6 +113,7 @@ export default function BreathingTool() {
     setTotalTime(0)
     setIsComplete(false)
     recordedRef.current = false
+    setShouldEnterFullscreen(true)
   }
 
   const handlePause = () => {
@@ -146,7 +148,7 @@ export default function BreathingTool() {
   }
 
   return (
-    <FullscreenToolWrapper toolName="breathing">
+    <FullscreenToolWrapper toolName="breathing" shouldEnterFullscreen={shouldEnterFullscreen}>
       <div className="min-h-[80vh] flex flex-col items-center justify-center px-4">
         {!isActive ? (
           <div className="w-full max-w-md animate-fade-in-up">
@@ -212,42 +214,45 @@ export default function BreathingTool() {
           </button>
         </div>
       ) : (
-        <div className="text-center animate-fade-in">
-          {/* Breathing Circle */}
-          <div className="relative w-80 h-80 mx-auto mb-12">
-            <div className="absolute inset-0 rounded-full bg-primary/10 blur-2xl animate-breathe" />
-            <div className="absolute inset-4 rounded-full bg-primary/20 blur-xl animate-breathe" style={{ animationDelay: '0.5s' }} />
+        <div className="text-center animate-fade-in w-full max-w-3xl">
+          {/* Breathing Circle - Enhanced for fullscreen */}
+          <div className="relative w-full aspect-square max-w-md mx-auto mb-12">
+            <div className="absolute inset-0 rounded-full bg-primary/5 blur-3xl animate-breathe" />
+            <div className="absolute inset-4 rounded-full bg-primary/10 blur-2xl animate-breathe" style={{ animationDelay: '0.5s' }} />
             <div
-              className="absolute inset-0 rounded-full bg-gradient-to-br from-primary-light via-primary to-primary-dark shadow-large transition-transform duration-100 ease-out"
-              style={{ transform: `scale(${getCircleScale()})` }}
+              className="absolute inset-0 rounded-full bg-gradient-to-br from-primary-light via-primary to-primary-dark shadow-2xl transition-transform duration-100 ease-out"
+              style={{
+                transform: `scale(${getCircleScale()})`,
+                boxShadow: '0 0 60px rgba(var(--color-primary-rgb), 0.3), 0 0 120px rgba(var(--color-primary-rgb), 0.15)'
+              }}
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-white text-2xl font-semibold mb-2">
+              <span className="text-white text-3xl md:text-4xl font-semibold mb-3">
                 {t(`breathing.phases.${phase}`)}
               </span>
-              <span className="text-white/80 text-sm">
+              <span className="text-white/90 text-lg md:text-xl font-medium">
                 {Math.ceil(getPhaseDuration(phase) - phaseTime)}s
               </span>
             </div>
           </div>
 
-          <p className="text-5xl font-bold text-gradient mb-3">
+          <p className="text-6xl md:text-7xl font-bold text-gradient mb-4">
             {formatTime(totalDurationSeconds - totalTime)}
           </p>
-          <p className="text-text-secondary text-lg mb-12">
+          <p className="text-text-secondary text-xl mb-16">
             {formatTime(totalTime)} / {formatTime(totalDurationSeconds)}
           </p>
 
           <div className="flex gap-4 justify-center">
             <button
               onClick={handlePause}
-              className="px-8 py-4 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:scale-105"
+              className="px-10 py-5 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-medium text-lg shadow-soft hover:shadow-large transition-all duration-300 hover:scale-105"
             >
               {isPaused ? t('breathing.resume') : t('breathing.pause')}
             </button>
             <button
               onClick={handleReset}
-              className="px-8 py-4 border-2 border-border text-text-secondary rounded-2xl font-medium hover:border-primary/30 hover:bg-background-alt transition-all duration-300"
+              className="px-10 py-5 border-2 border-border text-text-secondary rounded-2xl font-medium text-lg hover:border-primary/30 hover:bg-background-alt transition-all duration-300"
             >
               {t('common.stop')}
             </button>

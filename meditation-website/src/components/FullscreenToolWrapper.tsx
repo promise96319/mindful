@@ -1,15 +1,20 @@
 import { useState, useEffect, useRef } from 'react'
 import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface FullscreenToolWrapperProps {
   children: ReactNode
   toolName: string
+  shouldEnterFullscreen?: boolean
 }
 
-export default function FullscreenToolWrapper({ children }: FullscreenToolWrapperProps) {
+export default function FullscreenToolWrapper({ children, shouldEnterFullscreen = false }: FullscreenToolWrapperProps) {
+  const { t } = useTranslation('tools')
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [supportsFullscreen, setSupportsFullscreen] = useState(true)
+  const [showHint, setShowHint] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const hintTimerRef = useRef<number | null>(null)
 
   useEffect(() => {
     // Check if fullscreen is supported
@@ -18,12 +23,18 @@ export default function FullscreenToolWrapper({ children }: FullscreenToolWrappe
       return
     }
 
-    // Auto-enter fullscreen on mount
-    enterFullscreen()
-
     // Listen for fullscreen changes (user manually exiting)
     const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement)
+      const isNowFullscreen = !!document.fullscreenElement
+      setIsFullscreen(isNowFullscreen)
+
+      // Show hint when entering fullscreen
+      if (isNowFullscreen) {
+        setShowHint(true)
+        hintTimerRef.current = window.setTimeout(() => {
+          setShowHint(false)
+        }, 3000)
+      }
     }
 
     document.addEventListener('fullscreenchange', handleFullscreenChange)
@@ -37,12 +48,23 @@ export default function FullscreenToolWrapper({ children }: FullscreenToolWrappe
       document.removeEventListener('mozfullscreenchange', handleFullscreenChange)
       document.removeEventListener('MSFullscreenChange', handleFullscreenChange)
 
+      if (hintTimerRef.current) {
+        clearTimeout(hintTimerRef.current)
+      }
+
       // Exit fullscreen on unmount
       if (document.fullscreenElement) {
         exitFullscreen()
       }
     }
   }, [])
+
+  // Trigger fullscreen when shouldEnterFullscreen changes to true
+  useEffect(() => {
+    if (shouldEnterFullscreen && !isFullscreen) {
+      enterFullscreen()
+    }
+  }, [shouldEnterFullscreen])
 
   const enterFullscreen = async () => {
     if (!containerRef.current || !supportsFullscreen) return
@@ -93,15 +115,26 @@ export default function FullscreenToolWrapper({ children }: FullscreenToolWrappe
   return (
     <div
       ref={containerRef}
-      className={`relative ${isFullscreen ? 'bg-background' : ''}`}
+      className={`relative ${isFullscreen ? 'bg-gradient-to-br from-background via-background to-background-alt' : ''}`}
       style={isFullscreen ? { width: '100vw', height: '100vh' } : undefined}
     >
+      {/* ESC Hint - Show when entering fullscreen */}
+      {showHint && isFullscreen && (
+        <div className="fixed top-8 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-full bg-background/90 backdrop-blur-md border border-border-light text-text-secondary shadow-large animate-fade-in-up">
+          <div className="flex items-center gap-2">
+            <kbd className="px-2 py-1 bg-background-alt rounded text-xs font-mono border border-border">ESC</kbd>
+            <span className="text-sm">{t('common.exitFullscreen', '按 ESC 退出全屏')}</span>
+          </div>
+        </div>
+      )}
+
       {/* Fullscreen Toggle Button */}
       {supportsFullscreen && (
         <button
           onClick={toggleFullscreen}
-          className="fixed top-4 right-4 z-50 p-3 rounded-xl bg-background/80 backdrop-blur-sm border border-border-light text-text-secondary hover:text-primary hover:border-primary/30 transition-all duration-300 shadow-soft hover:shadow-medium group"
-          title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
+          className="fixed top-4 right-4 z-50 p-3 rounded-xl bg-background/60 backdrop-blur-md border border-border-light/50 text-text-secondary hover:text-primary hover:bg-background/80 hover:border-primary/50 transition-all duration-300 shadow-medium hover:shadow-large group"
+          title={isFullscreen ? t('common.exitFullscreen', '退出全屏') : t('common.enterFullscreen', '进入全屏')}
+          aria-label={isFullscreen ? t('common.exitFullscreen', '退出全屏') : t('common.enterFullscreen', '进入全屏')}
         >
           {isFullscreen ? (
             // Exit fullscreen icon
@@ -117,8 +150,10 @@ export default function FullscreenToolWrapper({ children }: FullscreenToolWrappe
         </button>
       )}
 
-      {/* Tool Content */}
-      {children}
+      {/* Tool Content - Centered in fullscreen with enhanced styling */}
+      <div className={isFullscreen ? 'flex items-center justify-center min-h-screen' : ''}>
+        {children}
+      </div>
     </div>
   )
 }

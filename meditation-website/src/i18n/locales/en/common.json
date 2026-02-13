@@ -9,6 +9,8 @@
     "login": "Log in",
     "logout": "Log out"
   },
+  "exitFullscreen": "Press ESC to exit fullscreen",
+  "enterFullscreen": "Enter fullscreen",
   "about": {
     "title": "About Mindful",
     "mission": {
