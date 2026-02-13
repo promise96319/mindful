@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '../hooks/useAuth'
 import { usePracticeStats } from '../hooks/usePracticeStats'
 import { getJournals } from '../services/apiService'
-import PracticeHeatmap from '../components/journal/PracticeHeatmap'
-import EmotionCalendar from '../components/journal/EmotionCalendar'
+import ImprovedHeatmap from '../features/stats/components/ImprovedHeatmap'
+import ImprovedEmotionCalendar from '../features/stats/components/ImprovedEmotionCalendar'
 import { MOOD_ICONS } from '../types/journal'
 import type { JournalEntry } from '../types/journal'
 
@@ -79,8 +79,8 @@ export default function Journal() {
 
       {/* Heatmap + Calendar */}
       <div className="grid lg:grid-cols-2 gap-6 mb-10">
-        <PracticeHeatmap records={records} />
-        <EmotionCalendar journals={journals} />
+        <ImprovedHeatmap records={records} />
+        <ImprovedEmotionCalendar journals={journals} />
       </div>
 
       {/* Journal List */}
