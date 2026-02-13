@@ -99,7 +99,7 @@ export default function JournalCard({
     setShowComments(!showComments)
   }
 
-  const displayName = journal.isAnonymous ? 'Anonymous' : journal.userName
+  const displayName = journal.isAnonymous ? 'Anonymous' : (journal.userName || 'Unknown User')
   const profileLink = journal.isAnonymous ? '#' : `/profile/${journal.userId}`
 
   return (

@@ -76,7 +76,7 @@ export class JournalsService {
       .sort({ createdAt: -1 })
       .skip(offset)
       .limit(limit)
-      .populate('userId', 'username avatar')
+      .populate('userId', 'username displayName email photoURL avatar')
       .exec();
   }
 
@@ -94,17 +94,23 @@ export class JournalsService {
       freeText: obj.freeText,
       isPublic: obj.isPublic,
       isAnonymous: obj.isAnonymous,
-      likeCount: obj.likeCount,
-      commentCount: obj.commentCount,
+      likes: obj.likeCount || 0,
+      commentsCount: obj.commentCount || 0,
+      isLiked: false, // TODO: Check if current user liked this
       createdAt: (obj as unknown as Record<string, unknown>).createdAt,
       updatedAt: (obj as unknown as Record<string, unknown>).updatedAt,
     };
 
     // Include user info if populated
     if (obj.userId && typeof obj.userId === 'object') {
-      response.user = obj.userId;
+      const user = obj.userId as any;
+      response.userId = user._id?.toString() || '';
+      response.userName = user.displayName || user.username || 'Unknown User';
+      response.userPhotoURL = user.photoURL || user.avatar || '';
     } else {
       response.userId = (obj.userId as Types.ObjectId).toString();
+      response.userName = 'Unknown User';
+      response.userPhotoURL = '';
     }
 
     return response;
