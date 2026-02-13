@@ -22,7 +22,7 @@ export default function VisualizationTool() {
   const [isPaused, setIsPaused] = useState(false)
   const [totalElapsed, setTotalElapsed] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
-  const [isFullscreen, setIsFullscreen] = useState(false)
+  const [shouldEnterFullscreen, setShouldEnterFullscreen] = useState(false)
   const [canvasSize, setCanvasSize] = useState({ width: 600, height: 400 })
 
   const intervalRef = useRef<number | null>(null)
@@ -33,13 +33,13 @@ export default function VisualizationTool() {
 
   // Handle resize for canvas
   const updateCanvasSize = useCallback(() => {
-    if (isFullscreen) {
+    if (shouldEnterFullscreen && document.fullscreenElement) {
       setCanvasSize({ width: window.innerWidth, height: window.innerHeight })
     } else if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect()
       setCanvasSize({ width: Math.floor(rect.width), height: Math.floor(Math.min(rect.width * 0.66, 500)) })
     }
-  }, [isFullscreen])
+  }, [shouldEnterFullscreen])
 
   useEffect(() => {
     updateCanvasSize()
@@ -76,27 +76,17 @@ export default function VisualizationTool() {
     if (isComplete && !hasRecordedRef.current) {
       hasRecordedRef.current = true
       addRecord('visualization', totalElapsed)
-      setIsFullscreen(false)
     }
   }, [isComplete, totalElapsed, addRecord])
 
-  // Exit fullscreen on Escape
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isFullscreen) {
-        setIsFullscreen(false)
-      }
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isFullscreen])
+  // Remove old Escape handler as FullscreenToolWrapper handles it
 
   const handleStart = () => {
     setIsActive(true)
     setIsPaused(false)
     setTotalElapsed(0)
     setIsComplete(false)
-    setIsFullscreen(true)
+    setShouldEnterFullscreen(true)
     hasRecordedRef.current = false
   }
 
@@ -109,7 +99,7 @@ export default function VisualizationTool() {
     setIsPaused(false)
     setTotalElapsed(0)
     setIsComplete(false)
-    setIsFullscreen(false)
+    setShouldEnterFullscreen(false)
     hasRecordedRef.current = false
   }
 
@@ -141,48 +131,46 @@ export default function VisualizationTool() {
     )
   }
 
-  // Fullscreen immersive mode
-  if (isActive && isFullscreen) {
+  // Fullscreen immersive mode - check for actual fullscreen state
+  const isInFullscreen = shouldEnterFullscreen && !!document.fullscreenElement
+  if (isActive && isInFullscreen) {
     return (
-      <FullscreenToolWrapper toolName="visualization">
+      <FullscreenToolWrapper toolName="visualization" shouldEnterFullscreen={shouldEnterFullscreen}>
         <div className="fixed inset-0 z-50 bg-black flex flex-col">
           {/* Canvas */}
           <div className="flex-1 relative">
             {renderScene()}
 
-            {/* Overlay controls */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60 to-transparent">
-              <div className="max-w-lg mx-auto">
-                {/* Timer */}
-                <p className="text-white text-3xl font-bold text-center mb-4">
+            {/* Overlay controls - Enhanced for fullscreen */}
+            <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/70 to-transparent">
+              <div className="max-w-2xl mx-auto">
+                {/* Timer - Larger */}
+                <p className="text-white text-5xl md:text-6xl font-bold text-center mb-6 drop-shadow-lg">
                   {formatTime(totalDurationSeconds - totalElapsed)}
                 </p>
 
-                {/* Progress bar */}
-                <div className="w-full bg-white/20 rounded-full h-1.5 mb-4 overflow-hidden">
+                {/* Progress bar - Enhanced */}
+                <div className="w-full bg-white/20 rounded-full h-2 mb-6 overflow-hidden">
                   <div
-                    className="h-full bg-white/80 rounded-full transition-all duration-1000"
-                    style={{ width: `${(totalElapsed / totalDurationSeconds) * 100}%` }}
+                    className="h-full bg-white/90 rounded-full transition-all duration-1000"
+                    style={{
+                      width: `${(totalElapsed / totalDurationSeconds) * 100}%`,
+                      boxShadow: '0 0 20px rgba(255, 255, 255, 0.5)'
+                    }}
                   />
                 </div>
 
-                {/* Controls */}
+                {/* Controls - Larger */}
                 <div className="flex items-center justify-center gap-4">
                   <button
                     onClick={handlePause}
-                    className="px-6 py-3 bg-white/20 backdrop-blur-sm text-white rounded-2xl font-medium hover:bg-white/30 transition-all duration-300"
+                    className="px-8 py-4 bg-white/25 backdrop-blur-md text-white rounded-2xl font-medium text-lg hover:bg-white/35 transition-all duration-300 hover:scale-105"
                   >
                     {isPaused ? t('common.resume') : t('common.pause')}
                   </button>
                   <button
-                    onClick={() => setIsFullscreen(false)}
-                    className="px-6 py-3 bg-white/10 backdrop-blur-sm text-white/80 rounded-2xl font-medium hover:bg-white/20 transition-all duration-300"
-                  >
-                    {t('visualization.exitFullscreen')}
-                  </button>
-                  <button
                     onClick={handleReset}
-                    className="px-6 py-3 bg-white/10 backdrop-blur-sm text-white/80 rounded-2xl font-medium hover:bg-white/20 transition-all duration-300"
+                    className="px-8 py-4 bg-white/15 backdrop-blur-md text-white/90 rounded-2xl font-medium text-lg hover:bg-white/25 transition-all duration-300"
                   >
                     {t('common.stop')}
                   </button>
@@ -195,10 +183,10 @@ export default function VisualizationTool() {
     )
   }
 
-  // Active but not fullscreen (windowed mode)
+  // Active but not fullscreen (windowed mode) - show option to enter fullscreen
   if (isActive) {
     return (
-      <FullscreenToolWrapper toolName="visualization">
+      <FullscreenToolWrapper toolName="visualization" shouldEnterFullscreen={shouldEnterFullscreen}>
         <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 animate-fade-in">
           <div className="w-full max-w-2xl">
             <div
@@ -225,10 +213,10 @@ export default function VisualizationTool() {
                 {isPaused ? t('common.resume') : t('common.pause')}
               </button>
               <button
-                onClick={() => setIsFullscreen(true)}
+                onClick={() => setShouldEnterFullscreen(true)}
                 className="px-8 py-4 bg-gradient-to-r from-secondary to-secondary-light text-white rounded-2xl font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:scale-105"
               >
-                {t('visualization.fullscreen')}
+                {t('visualization.fullscreen') || 'Fullscreen'}
               </button>
               <button
                 onClick={handleReset}
@@ -245,7 +233,7 @@ export default function VisualizationTool() {
 
   // Pre-start selection screen
   return (
-    <FullscreenToolWrapper toolName="visualization">
+    <FullscreenToolWrapper toolName="visualization" shouldEnterFullscreen={shouldEnterFullscreen}>
       <div className="min-h-[80vh] flex flex-col items-center justify-center px-4">
         <div className="w-full max-w-md animate-fade-in-up">
         <Link to="/tools" className="inline-flex items-center gap-2 text-text-secondary hover:text-primary mb-8 transition-all duration-300 hover:gap-3">
