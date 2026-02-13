@@ -30,7 +30,9 @@
       "Bash(curl:*)",
       "Bash(lsof:*)",
       "Bash(kill:*)",
-      "Bash(git push)"
+      "Bash(git push)",
+      "Bash(git mv:*)",
+      "Bash(git rm docs/plans/2026-01-29-meditation-website-design.md docs/plans/2026-02-09-mindful-prd.md)"
     ]
   }
 }
