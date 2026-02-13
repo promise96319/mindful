@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { HeartIcon, MessageCircleIcon, ShareIcon } from '../../../components/icons'
 import { MOOD_ICONS } from '../../../types/journal'
+import { useAuth } from '../../../hooks/useAuth'
 import CommentsSection from './CommentsSection'
 
 interface JournalCardProps {
@@ -48,6 +49,7 @@ export default function JournalCard({
   onShare,
   currentUserAvatar
 }: JournalCardProps) {
+  const { user, promptLogin } = useAuth()
   const [isLiked, setIsLiked] = useState(journal.isLiked)
   const [likesCount, setLikesCount] = useState(journal.likes)
   const [showComments, setShowComments] = useState(false)
@@ -58,9 +60,31 @@ export default function JournalCard({
     return `${mins} min`
   }
 
+  const formatDate = (dateStr: string) => {
+    if (!dateStr) return ''
+    const date = new Date(dateStr)
+    const now = new Date()
+    const diffMs = now.getTime() - date.getTime()
+    const diffMins = Math.floor(diffMs / 60000)
+    const diffHours = Math.floor(diffMs / 3600000)
+    const diffDays = Math.floor(diffMs / 86400000)
+
+    if (diffMins < 1) return 'just now'
+    if (diffMins < 60) return `${diffMins}m ago`
+    if (diffHours < 24) return `${diffHours}h ago`
+    if (diffDays < 7) return `${diffDays}d ago`
+
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  }
+
   const handleLike = async (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
+
+    if (!user) {
+      promptLogin()
+      return
+    }
 
     if (isLiking) return
 
@@ -96,11 +120,19 @@ export default function JournalCard({
   const toggleComments = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
+
+    if (!user && !showComments) {
+      promptLogin()
+      return
+    }
+
     setShowComments(!showComments)
   }
 
   const displayName = journal.isAnonymous ? 'Anonymous' : (journal.userName || 'Unknown User')
   const profileLink = journal.isAnonymous ? '#' : `/profile/${journal.userId}`
+  const totalComments = comments.length || journal.commentsCount
+  const displayedComments = showComments ? comments : comments.slice(0, 2)
 
   return (
     <div className="bg-card rounded-3xl border border-border-light p-6 shadow-soft hover:shadow-medium transition-all duration-300 break-inside-avoid mb-4">
@@ -133,7 +165,9 @@ export default function JournalCard({
               {displayName}
             </Link>
           )}
-          <p className="text-xs text-text-secondary">{journal.date}</p>
+          {journal.createdAt && (
+            <p className="text-xs text-text-secondary">{formatDate(journal.createdAt)}</p>
+          )}
         </div>
       </div>
 
@@ -182,7 +216,7 @@ export default function JournalCard({
           <HeartIcon
             className={`w-5 h-5 transition-all ${isLiked ? 'fill-current' : ''}`}
           />
-          <span>{likesCount}</span>
+          {likesCount > 0 && <span>{likesCount}</span>}
         </button>
 
         <button
@@ -190,7 +224,7 @@ export default function JournalCard({
           className="flex items-center gap-2 text-sm font-medium text-text-secondary hover:text-primary transition-all"
         >
           <MessageCircleIcon className="w-5 h-5" />
-          <span>{comments.length || journal.commentsCount}</span>
+          {totalComments > 0 && <span>{totalComments}</span>}
         </button>
 
         <button
@@ -201,14 +235,36 @@ export default function JournalCard({
         </button>
       </div>
 
-      {/* Comments Section */}
+      {/* Comments Preview (Xiaohongshu style) */}
+      {!showComments && comments.length > 0 && (
+        <div className="mt-3 pt-3 border-t border-border-light space-y-2">
+          {displayedComments.map((comment) => (
+            <div key={comment.id} className="text-sm">
+              <span className="font-medium text-text mr-2">{comment.userName}:</span>
+              <span className="text-text-secondary line-clamp-1">{comment.content}</span>
+            </div>
+          ))}
+          {totalComments > 2 && (
+            <button
+              onClick={toggleComments}
+              className="text-sm text-text-secondary hover:text-primary transition-colors"
+            >
+              View all {totalComments} comments
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Full Comments Section */}
       {showComments && (
-        <CommentsSection
-          journalId={journal.id}
-          comments={comments}
-          onAddComment={onAddComment}
-          currentUserAvatar={currentUserAvatar}
-        />
+        <div className="mt-3 pt-3 border-t border-border-light">
+          <CommentsSection
+            journalId={journal.id}
+            comments={comments}
+            onAddComment={onAddComment}
+            currentUserAvatar={currentUserAvatar}
+          />
+        </div>
       )}
     </div>
   )

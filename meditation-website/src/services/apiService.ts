@@ -167,13 +167,13 @@ export interface LikeResponse {
 }
 
 export async function likeJournal(journalId: string): Promise<LikeResponse> {
-  return apiFetch<LikeResponse>(`/api/social/journals/${journalId}/like`, {
+  return apiFetch<LikeResponse>(`/api/social/likes/journal/${journalId}`, {
     method: 'POST',
   })
 }
 
 export async function unlikeJournal(journalId: string): Promise<LikeResponse> {
-  return apiFetch<LikeResponse>(`/api/social/journals/${journalId}/like`, {
+  return apiFetch<LikeResponse>(`/api/social/likes/journal/${journalId}`, {
     method: 'DELETE',
   })
 }
@@ -205,18 +205,18 @@ export interface AddCommentRequest {
 }
 
 export async function getComments(journalId: string): Promise<Comment[]> {
-  return apiFetch<Comment[]>(`/api/social/journals/${journalId}/comments`)
+  return apiFetch<Comment[]>(`/api/social/comments/journal/${journalId}`)
 }
 
 export async function addComment(journalId: string, text: string): Promise<Comment> {
-  return apiFetch<Comment>(`/api/social/journals/${journalId}/comments`, {
+  return apiFetch<Comment>(`/api/social/comments/journal/${journalId}`, {
     method: 'POST',
     body: JSON.stringify({ text }),
   })
 }
 
 export async function deleteComment(journalId: string, commentId: string): Promise<void> {
-  await apiFetch(`/api/social/journals/${journalId}/comments/${commentId}`, {
+  await apiFetch(`/api/social/comments/${commentId}`, {
     method: 'DELETE',
   })
 }
