@@ -5,8 +5,8 @@ import { useAuth } from '../../../hooks/useAuth'
 import { usePracticeStats } from '../../../hooks/usePracticeStats'
 import { getJournals, getUserData } from '../../../services/apiService'
 import { getLevel, getLevelProgress, getNextLevel, formatDuration } from '../../../utils/levelSystem'
-import PracticeHeatmap from '../../../components/journal/PracticeHeatmap'
-import EmotionCalendar from '../../../components/journal/EmotionCalendar'
+import ImprovedHeatmap from '../../stats/components/ImprovedHeatmap'
+import ImprovedEmotionCalendar from '../../stats/components/ImprovedEmotionCalendar'
 import { MOOD_ICONS } from '../../../types/journal'
 import type { JournalEntry } from '../../../types/journal'
 
@@ -164,8 +164,8 @@ export default function PersonalProfilePage() {
 
       {/* Heatmap + Calendar */}
       <div className="grid lg:grid-cols-2 gap-6 mb-8">
-        <PracticeHeatmap records={records} />
-        <EmotionCalendar journals={journals} />
+        <ImprovedHeatmap records={records} />
+        <ImprovedEmotionCalendar journals={journals} />
       </div>
 
       {/* Journal List */}
