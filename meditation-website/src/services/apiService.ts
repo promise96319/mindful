@@ -34,6 +34,26 @@ export async function getPracticeRecordsByDateRange(
 
 // ==================== Journals ====================
 
+export interface PublicJournal {
+  id: string
+  userId: string
+  userName: string
+  userPhotoURL?: string
+  isAnonymous: boolean
+  date: string
+  toolUsed: string
+  duration: number
+  mood: number
+  focus: number
+  bodyTags: string[]
+  mindTags: string[]
+  freeText: string
+  likes: number
+  isLiked: boolean
+  commentsCount: number
+  createdAt: string
+}
+
 export async function addJournal(
   entry: Omit<JournalEntry, 'id' | 'createdAt' | 'updatedAt'>,
 ): Promise<JournalEntry & { id: string }> {
@@ -45,6 +65,22 @@ export async function addJournal(
 
 export async function getJournals(maxResults = 50): Promise<(JournalEntry & { id: string })[]> {
   return apiFetch<(JournalEntry & { id: string })[]>(`/api/journals?limit=${maxResults}`)
+}
+
+export async function getPublicJournals(
+  page = 0,
+  limit = 20,
+  filter?: 'all' | 'following',
+  searchQuery?: string
+): Promise<PublicJournal[]> {
+  let endpoint = `/api/journals/public?page=${page}&limit=${limit}`
+  if (filter && filter !== 'all') {
+    endpoint += `&filter=${filter}`
+  }
+  if (searchQuery) {
+    endpoint += `&search=${encodeURIComponent(searchQuery)}`
+  }
+  return apiFetch<PublicJournal[]>(endpoint)
 }
 
 export async function getJournal(journalId: string): Promise<JournalEntry & { id: string }> {
