@@ -1,0 +1,7 @@
+export { default as CommunityPage } from './pages/CommunityPage'
+export { default as PersonalProfilePage } from './pages/PersonalProfilePage'
+export { default as JournalCard } from './components/JournalCard'
+export { default as CommentsSection } from './components/CommentsSection'
+export { default as FollowButton } from './components/FollowButton'
+export { default as PublicJournalFeed } from './components/PublicJournalFeed'
+export { default as SearchBar } from './components/SearchBar'
