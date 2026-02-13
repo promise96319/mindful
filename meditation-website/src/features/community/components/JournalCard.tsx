@@ -55,6 +55,9 @@ export default function JournalCard({
   const [showComments, setShowComments] = useState(false)
   const [isLiking, setIsLiking] = useState(false)
 
+  // Ensure comments is always an array
+  const validComments = Array.isArray(comments) ? comments : []
+
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
     return `${mins} min`
@@ -131,8 +134,8 @@ export default function JournalCard({
 
   const displayName = journal.isAnonymous ? 'Anonymous' : (journal.userName || 'Unknown User')
   const profileLink = journal.isAnonymous ? '#' : `/profile/${journal.userId}`
-  const totalComments = comments.length || journal.commentsCount
-  const displayedComments = showComments ? comments : comments.slice(0, 2)
+  const totalComments = validComments.length || journal.commentsCount || 0
+  const displayedComments = showComments ? validComments : validComments.slice(0, 2)
 
   return (
     <div className="bg-card rounded-3xl border border-border-light p-6 shadow-soft hover:shadow-medium transition-all duration-300 break-inside-avoid mb-4">
@@ -236,7 +239,7 @@ export default function JournalCard({
       </div>
 
       {/* Comments Preview (Xiaohongshu style) */}
-      {!showComments && comments.length > 0 && (
+      {!showComments && validComments.length > 0 && (
         <div className="mt-3 pt-3 border-t border-border-light space-y-2">
           {displayedComments.map((comment) => (
             <div key={comment.id} className="text-sm">
@@ -260,7 +263,7 @@ export default function JournalCard({
         <div className="mt-3 pt-3 border-t border-border-light">
           <CommentsSection
             journalId={journal.id}
-            comments={comments}
+            comments={validComments}
             onAddComment={onAddComment}
             currentUserAvatar={currentUserAvatar}
           />
