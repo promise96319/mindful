@@ -21,7 +21,6 @@ export default function JournalForm({ initialData, toolName = '', duration = 0, 
   const isZh = i18n.language === 'zh-CN'
 
   const [mood, setMood] = useState(initialData?.mood ?? 3)
-  const [focus, setFocus] = useState(initialData?.focus ?? 3)
   const [bodyTags, setBodyTags] = useState<string[]>(initialData?.bodyTags ?? [])
   const [mindTags, setMindTags] = useState<string[]>(initialData?.mindTags ?? [])
   const [freeText, setFreeText] = useState(initialData?.freeText ?? '')
@@ -38,7 +37,7 @@ export default function JournalForm({ initialData, toolName = '', duration = 0, 
       toolUsed: initialData?.toolUsed ?? toolName,
       duration: initialData?.duration ?? duration,
       mood,
-      focus,
+      focus: 3, // Default value for backward compatibility
       bodyTags,
       mindTags,
       freeText,
@@ -55,29 +54,6 @@ export default function JournalForm({ initialData, toolName = '', duration = 0, 
           {t('mood', { defaultValue: 'Mood' })}
         </label>
         <MoodSelector value={mood} onChange={setMood} />
-      </div>
-
-      {/* Focus */}
-      <div>
-        <label className="block text-sm font-semibold text-text mb-3">
-          {t('focus', { defaultValue: 'Focus Level' })}
-        </label>
-        <div className="flex gap-2">
-          {[1, 2, 3, 4, 5].map((level) => (
-            <button
-              key={level}
-              type="button"
-              onClick={() => setFocus(level)}
-              className={`flex-1 py-3 rounded-xl text-sm font-medium transition-all duration-300 border-2 ${
-                focus === level
-                  ? 'bg-accent text-white border-accent shadow-soft'
-                  : 'bg-card text-text-secondary border-border-light hover:border-accent/30'
-              }`}
-            >
-              {level}
-            </button>
-          ))}
-        </div>
       </div>
 
       {/* Body Tags */}

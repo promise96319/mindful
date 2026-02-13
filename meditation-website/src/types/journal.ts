@@ -4,7 +4,7 @@ export interface JournalEntry {
   toolUsed: string
   duration: number
   mood: number // 1-5
-  focus: number // 1-5
+  focus?: number // 1-5 (optional for backward compatibility)
   bodyTags: string[]
   mindTags: string[]
   freeText: string
