@@ -126,7 +126,7 @@ export default function PracticeDurationBarChart({ records }: PracticeDurationBa
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold text-text">
-          {isZh ? '练习时长趋势' : 'Practice Duration Trend'}
+          {t('practiceDurationChart.title')}
         </h3>
 
         {/* Date Range Selector */}
@@ -142,7 +142,7 @@ export default function PracticeDurationBarChart({ records }: PracticeDurationBa
               }`}
             >
               {range}
-              {isZh ? '天' : 'd'}
+              {t('practiceDurationChart.days')}
             </button>
           ))}
         </div>
@@ -215,7 +215,7 @@ export default function PracticeDurationBarChart({ records }: PracticeDurationBa
                                 {formatDate(item.date)}
                                 {item.isToday && (
                                   <span className="ml-1 text-amber-500">
-                                    ({isZh ? '今天' : 'Today'})
+                                    ({t('practiceDurationChart.today')})
                                   </span>
                                 )}
                               </div>
@@ -224,7 +224,7 @@ export default function PracticeDurationBarChart({ records }: PracticeDurationBa
                               </div>
                               <div className="text-xs text-text-secondary">
                                 {item.sessionCount}{' '}
-                                {isZh ? '次练习' : item.sessionCount === 1 ? 'session' : 'sessions'}
+                                {t(item.sessionCount === 1 ? 'practiceDurationChart.session' : 'practiceDurationChart.sessions')}
                               </div>
                             </div>
                           )}
@@ -263,16 +263,16 @@ export default function PracticeDurationBarChart({ records }: PracticeDurationBa
         <div className="flex items-center gap-4 text-xs text-text-secondary">
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 rounded bg-gradient-to-t from-teal-600 to-teal-400" />
-            <span>{isZh ? '练习时长' : 'Practice Time'}</span>
+            <span>{t('practiceDurationChart.practiceTime')}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 rounded bg-gradient-to-t from-amber-500 to-amber-400" />
-            <span>{isZh ? '今天' : 'Today'}</span>
+            <span>{t('practiceDurationChart.today')}</span>
           </div>
         </div>
 
         <div className="text-xs text-text-secondary">
-          {isZh ? '单位：分钟' : 'Unit: minutes'}
+          {t('practiceDurationChart.unit')}
         </div>
       </div>
 
@@ -287,7 +287,7 @@ export default function PracticeDurationBarChart({ records }: PracticeDurationBa
                 )}
               </div>
               <div className="text-xs text-text-secondary mt-1">
-                {isZh ? '总时长' : 'Total Duration'}
+                {t('practiceDurationChart.totalDuration')}
               </div>
             </div>
             <div>
@@ -295,7 +295,7 @@ export default function PracticeDurationBarChart({ records }: PracticeDurationBa
                 {chartData.data.filter((d) => d.duration > 0).length}
               </div>
               <div className="text-xs text-text-secondary mt-1">
-                {isZh ? '练习天数' : 'Practice Days'}
+                {t('practiceDurationChart.practiceDays')}
               </div>
             </div>
             <div>
@@ -303,7 +303,7 @@ export default function PracticeDurationBarChart({ records }: PracticeDurationBa
                 {chartData.data.reduce((sum, d) => sum + d.sessionCount, 0)}
               </div>
               <div className="text-xs text-text-secondary mt-1">
-                {isZh ? '总次数' : 'Total Sessions'}
+                {t('practiceDurationChart.totalSessions')}
               </div>
             </div>
           </div>

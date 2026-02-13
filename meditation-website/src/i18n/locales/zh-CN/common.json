@@ -11,6 +11,19 @@
   },
   "exitFullscreen": "按 ESC 退出全屏",
   "enterFullscreen": "进入全屏",
+  "practiceDurationChart": {
+    "title": "练习时长趋势",
+    "today": "今天",
+    "practiceTime": "练习时长",
+    "unit": "单位：分钟",
+    "totalDuration": "总时长",
+    "practiceDays": "练习天数",
+    "totalSessions": "总次数",
+    "sessions": "次练习",
+    "session": "次练习",
+    "minutes": "分钟",
+    "days": "天"
+  },
   "about": {
     "title": "关于静心",
     "mission": {

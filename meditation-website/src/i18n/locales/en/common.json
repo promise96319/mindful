@@ -11,6 +11,19 @@
   },
   "exitFullscreen": "Press ESC to exit fullscreen",
   "enterFullscreen": "Enter fullscreen",
+  "practiceDurationChart": {
+    "title": "Practice Duration Trend",
+    "today": "Today",
+    "practiceTime": "Practice Time",
+    "unit": "Unit: minutes",
+    "totalDuration": "Total Duration",
+    "practiceDays": "Practice Days",
+    "totalSessions": "Total Sessions",
+    "sessions": "sessions",
+    "session": "session",
+    "minutes": "min",
+    "days": "d"
+  },
   "about": {
     "title": "About Mindful",
     "mission": {
