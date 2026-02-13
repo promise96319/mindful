@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import FullscreenToolWrapper from '../components/FullscreenToolWrapper'
 
 type SoundId = 'rain' | 'ocean' | 'forest' | 'stream' | 'fire' | 'wind' | 'birds' | 'whiteNoise'
 
@@ -42,7 +43,8 @@ export default function AmbientTool() {
   const activeSounds = sounds.filter(s => s.active)
 
   return (
-    <div className="min-h-[80vh] py-8 px-4">
+    <FullscreenToolWrapper toolName="ambient">
+      <div className="min-h-[80vh] py-8 px-4">
       <div className="max-w-3xl mx-auto animate-fade-in-up">
         <Link to="/tools" className="inline-flex items-center gap-2 text-text-secondary hover:text-primary mb-8 transition-all duration-300 hover:gap-3">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
@@ -166,5 +168,6 @@ export default function AmbientTool() {
         </div>
       </div>
     </div>
+    </FullscreenToolWrapper>
   )
 }

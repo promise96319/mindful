@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import CompletionScreen from '../components/CompletionScreen'
+import FullscreenToolWrapper from '../components/FullscreenToolWrapper'
+import CompletionModal from '../components/CompletionModal'
 import MandalaScene from '../components/visualizations/MandalaScene'
 import StarfieldScene from '../components/visualizations/StarfieldScene'
 import WaterRippleScene from '../components/visualizations/WaterRippleScene'
@@ -131,12 +132,11 @@ export default function VisualizationTool() {
 
   if (isComplete) {
     return (
-      <CompletionScreen
+      <CompletionModal
         toolName="visualization"
         duration={totalElapsed}
         onRestart={handleReset}
-        completeTitleKey="visualization.complete"
-        completeMessage={`${t('visualization.totalTime')}: ${formatTime(totalElapsed)}`}
+        onClose={() => setIsComplete(false)}
       />
     )
   }
@@ -144,7 +144,8 @@ export default function VisualizationTool() {
   // Fullscreen immersive mode
   if (isActive && isFullscreen) {
     return (
-      <div className="fixed inset-0 z-50 bg-black flex flex-col">
+      <FullscreenToolWrapper toolName="visualization">
+        <div className="fixed inset-0 z-50 bg-black flex flex-col">
         {/* Canvas */}
         <div className="flex-1 relative">
           {renderScene()}
@@ -189,14 +190,15 @@ export default function VisualizationTool() {
             </div>
           </div>
         </div>
-      </div>
+      </FullscreenToolWrapper>
     )
   }
 
   // Active but not fullscreen (windowed mode)
   if (isActive) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 animate-fade-in">
+      <FullscreenToolWrapper toolName="visualization">
+        <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 animate-fade-in">
         <div className="w-full max-w-2xl">
           <div
             ref={containerRef}
@@ -235,13 +237,14 @@ export default function VisualizationTool() {
             </button>
           </div>
         </div>
-      </div>
+      </FullscreenToolWrapper>
     )
   }
 
   // Pre-start selection screen
   return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center px-4">
+    <FullscreenToolWrapper toolName="visualization">
+      <div className="min-h-[80vh] flex flex-col items-center justify-center px-4">
       <div className="w-full max-w-md animate-fade-in-up">
         <Link to="/tools" className="inline-flex items-center gap-2 text-text-secondary hover:text-primary mb-8 transition-all duration-300 hover:gap-3">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
@@ -314,5 +317,6 @@ export default function VisualizationTool() {
         </button>
       </div>
     </div>
+    </FullscreenToolWrapper>
   )
 }

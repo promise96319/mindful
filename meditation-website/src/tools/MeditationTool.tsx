@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { usePracticeStats } from '../hooks/usePracticeStats'
-import CompletionScreen from '../components/CompletionScreen'
+import FullscreenToolWrapper from '../components/FullscreenToolWrapper'
+import CompletionModal from '../components/CompletionModal'
 
 type Theme = 'mindfulness' | 'lovingKindness' | 'sleep'
 
@@ -75,18 +76,18 @@ export default function MeditationTool() {
 
   if (isComplete) {
     return (
-      <CompletionScreen
+      <CompletionModal
         toolName="meditation"
         duration={totalDurationSeconds}
         onRestart={handleReset}
-        completeTitleKey="meditation.complete"
-        completeMessage={`${duration} ${t('common.minutes') || 'minutes'} ${t('common.of') || 'of'} ${t(`meditation.themes.${theme}`)}`}
+        onClose={() => setIsComplete(false)}
       />
     )
   }
 
   return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center px-4">
+    <FullscreenToolWrapper toolName="meditation">
+      <div className="min-h-[80vh] flex flex-col items-center justify-center px-4">
       {timeLeft === 0 ? (
         <div className="w-full max-w-md animate-fade-in-up">
           <Link to="/tools" className="inline-flex items-center gap-2 text-text-secondary hover:text-primary mb-8 transition-all duration-300 hover:gap-3">
@@ -189,5 +190,6 @@ export default function MeditationTool() {
         </div>
       )}
     </div>
+    </FullscreenToolWrapper>
   )
 }

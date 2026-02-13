@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { usePracticeStats } from '../hooks/usePracticeStats'
-import CompletionScreen from '../components/CompletionScreen'
+import FullscreenToolWrapper from '../components/FullscreenToolWrapper'
+import CompletionModal from '../components/CompletionModal'
 
 const presetDurations = [5, 10, 15, 20, 30]
 
@@ -84,18 +85,18 @@ export default function TimerTool() {
 
   if (isComplete) {
     return (
-      <CompletionScreen
+      <CompletionModal
         toolName="timer"
         duration={totalDurationSeconds}
         onRestart={handleReset}
-        completeTitleKey="timer.complete"
-        completeMessage={`${duration} ${t('timer.minutes')} ${t('timer.session') || 'meditation'}`}
+        onClose={() => setIsComplete(false)}
       />
     )
   }
 
   return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center px-4">
+    <FullscreenToolWrapper toolName="timer">
+      <div className="min-h-[80vh] flex flex-col items-center justify-center px-4">
       {!isActive ? (
         <div className="w-full max-w-md animate-fade-in-up">
           <Link to="/tools" className="inline-flex items-center gap-2 text-text-secondary hover:text-primary mb-8 transition-all duration-300 hover:gap-3">
@@ -213,5 +214,6 @@ export default function TimerTool() {
         </div>
       )}
     </div>
+    </FullscreenToolWrapper>
   )
 }

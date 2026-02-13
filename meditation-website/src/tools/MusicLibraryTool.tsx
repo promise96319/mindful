@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { tracks, categories, type Category, type Track } from '../data/musicLibrary'
 import { usePracticeStats } from '../hooks/usePracticeStats'
+import FullscreenToolWrapper from '../components/FullscreenToolWrapper'
 
 export default function MusicLibraryTool() {
   const { t, i18n } = useTranslation('tools')
@@ -133,7 +134,8 @@ export default function MusicLibraryTool() {
   const timerOptions = [0, 5, 10, 15, 30, 60]
 
   return (
-    <div className="min-h-[80vh] py-8 px-4">
+    <FullscreenToolWrapper toolName="musicLibrary">
+      <div className="min-h-[80vh] py-8 px-4">
       <div className="max-w-3xl mx-auto animate-fade-in-up">
         <Link to="/tools" className="inline-flex items-center gap-2 text-text-secondary hover:text-primary mb-8 transition-all duration-300 hover:gap-3">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
@@ -338,5 +340,6 @@ export default function MusicLibraryTool() {
         </div>
       </div>
     </div>
+    </FullscreenToolWrapper>
   )
 }

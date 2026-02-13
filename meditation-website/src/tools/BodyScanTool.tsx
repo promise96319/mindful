@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import CompletionScreen from '../components/CompletionScreen'
+import FullscreenToolWrapper from '../components/FullscreenToolWrapper'
+import CompletionModal from '../components/CompletionModal'
 import BodyOutline from '../components/BodyOutline'
 import { usePracticeStats } from '../hooks/usePracticeStats'
 
@@ -119,18 +120,18 @@ export default function BodyScanTool() {
 
   if (isComplete) {
     return (
-      <CompletionScreen
+      <CompletionModal
         toolName="bodyScan"
         duration={totalElapsed}
         onRestart={handleReset}
-        completeTitleKey="bodyScan.complete"
-        completeMessage={`${t('bodyScan.totalTime')}: ${formatTime(totalElapsed)}`}
+        onClose={() => setIsComplete(false)}
       />
     )
   }
 
   return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center px-4">
+    <FullscreenToolWrapper toolName="bodyScan">
+      <div className="min-h-[80vh] flex flex-col items-center justify-center px-4">
       {!isActive ? (
         <div className="w-full max-w-md animate-fade-in-up">
           <Link to="/tools" className="inline-flex items-center gap-2 text-text-secondary hover:text-primary mb-8 transition-all duration-300 hover:gap-3">
@@ -250,5 +251,6 @@ export default function BodyScanTool() {
         </div>
       )}
     </div>
+    </FullscreenToolWrapper>
   )
 }

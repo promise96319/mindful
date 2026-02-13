@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { usePracticeStats } from '../hooks/usePracticeStats'
-import CompletionScreen from '../components/CompletionScreen'
+import FullscreenToolWrapper from '../components/FullscreenToolWrapper'
+import CompletionModal from '../components/CompletionModal'
 
 type BreathingMode = 'abdominal' | '478' | 'box'
 type Phase = 'inhale' | 'hold' | 'exhale' | 'rest'
@@ -135,26 +136,26 @@ export default function BreathingTool() {
 
   if (isComplete) {
     return (
-      <CompletionScreen
+      <CompletionModal
         toolName="breathing"
         duration={Math.floor(totalTime)}
         onRestart={handleReset}
-        completeTitleKey="breathing.complete"
-        completeMessage={`${t('breathing.totalTime')}: ${formatTime(totalTime)}`}
+        onClose={() => setIsComplete(false)}
       />
     )
   }
 
   return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center px-4">
-      {!isActive ? (
-        <div className="w-full max-w-md animate-fade-in-up">
-          <Link to="/tools" className="inline-flex items-center gap-2 text-text-secondary hover:text-primary mb-8 transition-all duration-300 hover:gap-3">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-            </svg>
-            {t('common.back')}
-          </Link>
+    <FullscreenToolWrapper toolName="breathing">
+      <div className="min-h-[80vh] flex flex-col items-center justify-center px-4">
+        {!isActive ? (
+          <div className="w-full max-w-md animate-fade-in-up">
+            <Link to="/tools" className="inline-flex items-center gap-2 text-text-secondary hover:text-primary mb-8 transition-all duration-300 hover:gap-3">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+              {t('common.back')}
+            </Link>
 
           <h1 className="text-3xl font-bold text-gradient mb-3">{t('breathing.title')}</h1>
           <p className="text-text-secondary mb-8 leading-relaxed">{t('breathing.desc')}</p>
@@ -254,5 +255,6 @@ export default function BreathingTool() {
         </div>
       )}
     </div>
+    </FullscreenToolWrapper>
   )
 }
