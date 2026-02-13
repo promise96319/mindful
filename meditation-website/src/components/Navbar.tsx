@@ -76,14 +76,14 @@ export default function Navbar() {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-1 bg-background-alt/50 rounded-full px-2 py-1.5">
+          <NavLink to="/journal" className={navLinkClass}>
+            {t('nav.explore')}
+          </NavLink>
           <NavLink to="/learn" className={navLinkClass}>
             {t('nav.learn')}
           </NavLink>
           <NavLink to="/tools" className={navLinkClass}>
             {t('nav.tools')}
-          </NavLink>
-          <NavLink to="/journal" className={navLinkClass}>
-            {t('nav.journal', { defaultValue: 'Journal' })}
           </NavLink>
           <NavLink to="/about" className={navLinkClass}>
             {t('nav.about')}
@@ -129,13 +129,6 @@ export default function Navbar() {
                     className="block px-4 py-2.5 text-sm text-text hover:text-primary hover:bg-primary/5 transition-colors"
                   >
                     {t('nav.profile', { defaultValue: 'Profile' })}
-                  </Link>
-                  <Link
-                    to="/journal"
-                    onClick={() => setUserMenuOpen(false)}
-                    className="block px-4 py-2.5 text-sm text-text hover:text-primary hover:bg-primary/5 transition-colors"
-                  >
-                    {t('nav.journal', { defaultValue: 'Journal' })}
                   </Link>
                   <hr className="my-1 border-border-light" />
                   <button
@@ -201,6 +194,19 @@ export default function Navbar() {
       >
         <div className="px-6 pb-6 pt-2 space-y-2 bg-background-warm/95 backdrop-blur-lg border-b border-border-light">
           <NavLink
+            to="/journal"
+            onClick={() => setMobileMenuOpen(false)}
+            className={({ isActive }) =>
+              `block px-4 py-3 rounded-xl text-base font-medium transition-all duration-300 ${
+                isActive
+                  ? 'text-primary bg-primary/10'
+                  : 'text-text-secondary hover:text-primary hover:bg-primary/5'
+              }`
+            }
+          >
+            {t('nav.explore')}
+          </NavLink>
+          <NavLink
             to="/learn"
             onClick={() => setMobileMenuOpen(false)}
             className={({ isActive }) =>
@@ -225,19 +231,6 @@ export default function Navbar() {
             }
           >
             {t('nav.tools')}
-          </NavLink>
-          <NavLink
-            to="/journal"
-            onClick={() => setMobileMenuOpen(false)}
-            className={({ isActive }) =>
-              `block px-4 py-3 rounded-xl text-base font-medium transition-all duration-300 ${
-                isActive
-                  ? 'text-primary bg-primary/10'
-                  : 'text-text-secondary hover:text-primary hover:bg-primary/5'
-              }`
-            }
-          >
-            {t('nav.journal', { defaultValue: 'Journal' })}
           </NavLink>
           <NavLink
             to="/about"
