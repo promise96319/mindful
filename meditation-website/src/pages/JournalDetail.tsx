@@ -121,12 +121,6 @@ export default function JournalDetail() {
           </div>
         </div>
 
-        {/* Focus */}
-        <div className="mb-6">
-          <span className="text-sm font-medium text-text-secondary">{t('focus', { defaultValue: 'Focus' })}: </span>
-          <span className="text-text font-semibold">{journal.focus}/5</span>
-        </div>
-
         {/* Tags */}
         {(journal.bodyTags.length > 0 || journal.mindTags.length > 0) && (
           <div className="mb-6">
