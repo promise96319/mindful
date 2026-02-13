@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { JournalsModule } from './journals/journals.module';
 import { PracticeRecordsModule } from './practice-records/practice-records.module';
+import { SocialModule } from './social/social.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { PracticeRecordsModule } from './practice-records/practice-records.modul
     UsersModule,
     JournalsModule,
     PracticeRecordsModule,
+    SocialModule,
   ],
   providers: [
     {
