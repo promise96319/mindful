@@ -1,25 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import JournalCard from './JournalCard'
-
-interface PublicJournal {
-  id: string
-  userId: string
-  userName: string
-  userAvatar?: string
-  isAnonymous: boolean
-  date: string
-  toolUsed: string
-  duration: number
-  mood: number
-  focus: number
-  bodyTags: string[]
-  mindTags: string[]
-  freeText: string
-  likes: number
-  isLiked: boolean
-  commentsCount: number
-  createdAt: string
-}
+import type { PublicJournal } from '../../../services/apiService'
 
 interface PublicJournalFeedProps {
   fetchJournals: (page: number, limit: number, filter?: string, searchQuery?: string) => Promise<PublicJournal[]>
@@ -136,7 +117,10 @@ export default function PublicJournalFeed({
         {journals.map((journal) => (
           <JournalCard
             key={journal.id}
-            journal={journal}
+            journal={{
+              ...journal,
+              userAvatar: journal.userPhotoURL,
+            }}
             comments={[]}
             onLike={onLike}
             onUnlike={onUnlike}
