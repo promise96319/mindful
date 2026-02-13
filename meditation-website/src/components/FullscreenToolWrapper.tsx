@@ -1,16 +1,15 @@
-import { useState, useEffect, useRef, ReactNode } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import type { ReactNode } from 'react'
 
 interface FullscreenToolWrapperProps {
   children: ReactNode
-  onComplete?: (duration: number) => void
   toolName: string
 }
 
-export default function FullscreenToolWrapper({ children, onComplete, toolName }: FullscreenToolWrapperProps) {
+export default function FullscreenToolWrapper({ children }: FullscreenToolWrapperProps) {
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [supportsFullscreen, setSupportsFullscreen] = useState(true)
   const containerRef = useRef<HTMLDivElement>(null)
-  const startTimeRef = useRef<number>(Date.now())
 
   useEffect(() => {
     // Check if fullscreen is supported

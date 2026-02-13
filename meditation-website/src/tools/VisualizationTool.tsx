@@ -146,46 +146,47 @@ export default function VisualizationTool() {
     return (
       <FullscreenToolWrapper toolName="visualization">
         <div className="fixed inset-0 z-50 bg-black flex flex-col">
-        {/* Canvas */}
-        <div className="flex-1 relative">
-          {renderScene()}
+          {/* Canvas */}
+          <div className="flex-1 relative">
+            {renderScene()}
 
-          {/* Overlay controls */}
-          <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60 to-transparent">
-            <div className="max-w-lg mx-auto">
-              {/* Timer */}
-              <p className="text-white text-3xl font-bold text-center mb-4">
-                {formatTime(totalDurationSeconds - totalElapsed)}
-              </p>
+            {/* Overlay controls */}
+            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60 to-transparent">
+              <div className="max-w-lg mx-auto">
+                {/* Timer */}
+                <p className="text-white text-3xl font-bold text-center mb-4">
+                  {formatTime(totalDurationSeconds - totalElapsed)}
+                </p>
 
-              {/* Progress bar */}
-              <div className="w-full bg-white/20 rounded-full h-1.5 mb-4 overflow-hidden">
-                <div
-                  className="h-full bg-white/80 rounded-full transition-all duration-1000"
-                  style={{ width: `${(totalElapsed / totalDurationSeconds) * 100}%` }}
-                />
-              </div>
+                {/* Progress bar */}
+                <div className="w-full bg-white/20 rounded-full h-1.5 mb-4 overflow-hidden">
+                  <div
+                    className="h-full bg-white/80 rounded-full transition-all duration-1000"
+                    style={{ width: `${(totalElapsed / totalDurationSeconds) * 100}%` }}
+                  />
+                </div>
 
-              {/* Controls */}
-              <div className="flex items-center justify-center gap-4">
-                <button
-                  onClick={handlePause}
-                  className="px-6 py-3 bg-white/20 backdrop-blur-sm text-white rounded-2xl font-medium hover:bg-white/30 transition-all duration-300"
-                >
-                  {isPaused ? t('common.resume') : t('common.pause')}
-                </button>
-                <button
-                  onClick={() => setIsFullscreen(false)}
-                  className="px-6 py-3 bg-white/10 backdrop-blur-sm text-white/80 rounded-2xl font-medium hover:bg-white/20 transition-all duration-300"
-                >
-                  {t('visualization.exitFullscreen')}
-                </button>
-                <button
-                  onClick={handleReset}
-                  className="px-6 py-3 bg-white/10 backdrop-blur-sm text-white/80 rounded-2xl font-medium hover:bg-white/20 transition-all duration-300"
-                >
-                  {t('common.stop')}
-                </button>
+                {/* Controls */}
+                <div className="flex items-center justify-center gap-4">
+                  <button
+                    onClick={handlePause}
+                    className="px-6 py-3 bg-white/20 backdrop-blur-sm text-white rounded-2xl font-medium hover:bg-white/30 transition-all duration-300"
+                  >
+                    {isPaused ? t('common.resume') : t('common.pause')}
+                  </button>
+                  <button
+                    onClick={() => setIsFullscreen(false)}
+                    className="px-6 py-3 bg-white/10 backdrop-blur-sm text-white/80 rounded-2xl font-medium hover:bg-white/20 transition-all duration-300"
+                  >
+                    {t('visualization.exitFullscreen')}
+                  </button>
+                  <button
+                    onClick={handleReset}
+                    className="px-6 py-3 bg-white/10 backdrop-blur-sm text-white/80 rounded-2xl font-medium hover:bg-white/20 transition-all duration-300"
+                  >
+                    {t('common.stop')}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -199,42 +200,43 @@ export default function VisualizationTool() {
     return (
       <FullscreenToolWrapper toolName="visualization">
         <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 animate-fade-in">
-        <div className="w-full max-w-2xl">
-          <div
-            ref={containerRef}
-            className="w-full rounded-3xl overflow-hidden shadow-large mb-6 border border-border-light"
-          >
-            {renderScene()}
-          </div>
+          <div className="w-full max-w-2xl">
+            <div
+              ref={containerRef}
+              className="w-full rounded-3xl overflow-hidden shadow-large mb-6 border border-border-light"
+            >
+              {renderScene()}
+            </div>
 
-          {/* Timer */}
-          <p className="text-4xl font-bold text-gradient text-center mb-2">
-            {formatTime(totalDurationSeconds - totalElapsed)}
-          </p>
-          <p className="text-text-secondary text-center text-sm mb-6">
-            {formatTime(totalElapsed)} / {formatTime(totalDurationSeconds)}
-          </p>
+            {/* Timer */}
+            <p className="text-4xl font-bold text-gradient text-center mb-2">
+              {formatTime(totalDurationSeconds - totalElapsed)}
+            </p>
+            <p className="text-text-secondary text-center text-sm mb-6">
+              {formatTime(totalElapsed)} / {formatTime(totalDurationSeconds)}
+            </p>
 
-          {/* Controls */}
-          <div className="flex gap-4 justify-center">
-            <button
-              onClick={handlePause}
-              className="px-8 py-4 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:scale-105"
-            >
-              {isPaused ? t('common.resume') : t('common.pause')}
-            </button>
-            <button
-              onClick={() => setIsFullscreen(true)}
-              className="px-8 py-4 bg-gradient-to-r from-secondary to-secondary-light text-white rounded-2xl font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:scale-105"
-            >
-              {t('visualization.fullscreen')}
-            </button>
-            <button
-              onClick={handleReset}
-              className="px-8 py-4 border-2 border-border text-text-secondary rounded-2xl font-medium hover:border-primary/30 hover:bg-background-alt transition-all duration-300"
-            >
-              {t('common.stop')}
-            </button>
+            {/* Controls */}
+            <div className="flex gap-4 justify-center">
+              <button
+                onClick={handlePause}
+                className="px-8 py-4 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:scale-105"
+              >
+                {isPaused ? t('common.resume') : t('common.pause')}
+              </button>
+              <button
+                onClick={() => setIsFullscreen(true)}
+                className="px-8 py-4 bg-gradient-to-r from-secondary to-secondary-light text-white rounded-2xl font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:scale-105"
+              >
+                {t('visualization.fullscreen')}
+              </button>
+              <button
+                onClick={handleReset}
+                className="px-8 py-4 border-2 border-border text-text-secondary rounded-2xl font-medium hover:border-primary/30 hover:bg-background-alt transition-all duration-300"
+              >
+                {t('common.stop')}
+              </button>
+            </div>
           </div>
         </div>
       </FullscreenToolWrapper>
@@ -245,7 +247,7 @@ export default function VisualizationTool() {
   return (
     <FullscreenToolWrapper toolName="visualization">
       <div className="min-h-[80vh] flex flex-col items-center justify-center px-4">
-      <div className="w-full max-w-md animate-fade-in-up">
+        <div className="w-full max-w-md animate-fade-in-up">
         <Link to="/tools" className="inline-flex items-center gap-2 text-text-secondary hover:text-primary mb-8 transition-all duration-300 hover:gap-3">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
