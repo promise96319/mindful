@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../hooks/useAuth'
@@ -6,10 +6,18 @@ import { addJournal } from '../services/apiService'
 import JournalForm from '../components/journal/JournalForm'
 import type { JournalEntry } from '../types/journal'
 
+interface LocationState {
+  toolUsed?: string
+  duration?: number
+  timestamp?: string
+}
+
 export default function JournalNew() {
   const { t } = useTranslation('journal')
   const { user, promptLogin } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+  const state = location.state as LocationState | null
 
   const handleSubmit = async (entry: Omit<JournalEntry, 'id' | 'createdAt' | 'updatedAt'>) => {
     if (!user) {
@@ -35,6 +43,8 @@ export default function JournalNew() {
 
       <div className="bg-card rounded-3xl border border-border-light p-6 shadow-soft">
         <JournalForm
+          toolName={state?.toolUsed}
+          duration={state?.duration}
           onSubmit={handleSubmit}
           onCancel={() => navigate('/journal')}
         />
