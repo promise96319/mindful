@@ -40,9 +40,13 @@ export class CommentController {
       journalId,
       dto.content,
     );
+
+    // Fetch the comment with populated user info
+    const populatedComment = await this.commentService.getById(comment._id.toString());
+
     return {
       success: true,
-      data: comment,
+      data: this.commentService.toResponse(populatedComment),
     };
   }
 
@@ -97,7 +101,7 @@ export class CommentController {
     );
     return {
       success: true,
-      data: comments,
+      data: comments.map(c => this.commentService.toResponse(c)),
     };
   }
 

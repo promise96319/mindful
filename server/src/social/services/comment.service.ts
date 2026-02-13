@@ -24,7 +24,7 @@ export class CommentService {
     userId: string,
     journalId: string,
     content: string,
-  ): Promise<Comment> {
+  ): Promise<CommentDocument> {
     // Validate IDs
     if (!Types.ObjectId.isValid(userId) || !Types.ObjectId.isValid(journalId)) {
       throw new BadRequestException('Invalid ID');
@@ -99,6 +99,26 @@ export class CommentService {
   }
 
   /**
+   * Get a single comment by ID
+   */
+  async getById(commentId: string): Promise<any> {
+    if (!Types.ObjectId.isValid(commentId)) {
+      throw new BadRequestException('Invalid comment ID');
+    }
+
+    const comment = await this.commentModel
+      .findById(commentId)
+      .populate('userId', 'displayName username photoURL avatar')
+      .exec();
+
+    if (!comment) {
+      throw new NotFoundException('Comment not found');
+    }
+
+    return comment;
+  }
+
+  /**
    * Get comments for a journal
    */
   async getByJournal(
@@ -124,9 +144,36 @@ export class CommentService {
       .find({ journalId: new Types.ObjectId(journalId) })
       .skip(offset)
       .limit(limit)
-      .populate('userId', 'displayName avatar')
+      .populate('userId', 'displayName username photoURL avatar')
       .sort({ createdAt: -1 })
       .exec();
+  }
+
+  /**
+   * Transform comment document to response format
+   */
+  toResponse(doc: any) {
+    const response: any = {
+      id: doc._id.toString(),
+      journalId: doc.journalId.toString(),
+      content: doc.content,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
+    };
+
+    // Include user info if populated
+    if (doc.userId && typeof doc.userId === 'object') {
+      const user = doc.userId as any;
+      response.userId = user._id?.toString() || '';
+      response.userName = user.displayName || user.username || 'Unknown User';
+      response.userPhotoURL = user.photoURL || user.avatar || '';
+    } else {
+      response.userId = doc.userId.toString();
+      response.userName = 'Unknown User';
+      response.userPhotoURL = '';
+    }
+
+    return response;
   }
 
   /**
