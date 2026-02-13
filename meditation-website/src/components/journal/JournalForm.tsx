@@ -110,27 +110,48 @@ export default function JournalForm({ initialData, toolName = '', duration = 0, 
         />
       </div>
 
-      {/* Privacy */}
-      <div className="flex items-center gap-6">
-        <label className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={isPublic}
-            onChange={(e) => setIsPublic(e.target.checked)}
-            className="w-4 h-4 rounded accent-primary"
-          />
-          <span className="text-sm text-text-secondary">{t('public', { defaultValue: 'Public' })}</span>
-        </label>
-        {isPublic && (
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={isAnonymous}
-              onChange={(e) => setIsAnonymous(e.target.checked)}
-              className="w-4 h-4 rounded accent-primary"
-            />
-            <span className="text-sm text-text-secondary">{t('anonymous', { defaultValue: 'Anonymous' })}</span>
+      {/* Share to Community */}
+      <div className="bg-background-alt rounded-2xl p-5 border-2 border-border-light">
+        <div className="flex items-start gap-3 mb-3">
+          <label className="flex items-center gap-3 cursor-pointer flex-1 group">
+            <div className="relative">
+              <input
+                type="checkbox"
+                checked={isPublic}
+                onChange={(e) => setIsPublic(e.target.checked)}
+                className="w-5 h-5 rounded-lg accent-primary cursor-pointer"
+              />
+            </div>
+            <div className="flex-1">
+              <div className="text-base font-semibold text-text group-hover:text-primary transition-colors">
+                {t('shareToComm', { defaultValue: 'Share to Community' })}
+              </div>
+              <div className="text-xs text-text-tertiary mt-0.5">
+                {t('shareToCommDesc', { defaultValue: 'Let others see your meditation journey' })}
+              </div>
+            </div>
           </label>
+        </div>
+
+        {isPublic && (
+          <div className="ml-8 pt-3 border-t border-border-light">
+            <label className="flex items-center gap-3 cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={isAnonymous}
+                onChange={(e) => setIsAnonymous(e.target.checked)}
+                className="w-4 h-4 rounded accent-primary cursor-pointer"
+              />
+              <div className="flex-1">
+                <span className="text-sm font-medium text-text-secondary group-hover:text-text transition-colors">
+                  {t('postAnonymously', { defaultValue: 'Post Anonymously' })}
+                </span>
+                <div className="text-xs text-text-tertiary mt-0.5">
+                  {t('postAnonymouslyDesc', { defaultValue: 'Hide your name and avatar' })}
+                </div>
+              </div>
+            </label>
+          </div>
         )}
       </div>
 
