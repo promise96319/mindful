@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Search } from 'lucide-react'
+import { SearchIcon } from '../../../components/icons'
 
 interface SearchBarProps {
   onSearch: (query: string) => void
@@ -24,7 +24,7 @@ export default function SearchBar({
 
   return (
     <div className="relative">
-      <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-secondary" />
+      <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-secondary" />
       <input
         type="text"
         value={query}

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { UserPlus, UserCheck } from 'lucide-react'
+import { UserPlusIcon, UserCheckIcon } from '../../../components/icons'
 
 interface FollowButtonProps {
   userId: string
@@ -50,9 +50,9 @@ export default function FollowButton({ userId, isFollowing, onFollowToggle }: Fo
       {loading ? (
         <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
       ) : following ? (
-        <UserCheck className="w-4 h-4" />
+        <UserCheckIcon className="w-4 h-4" />
       ) : (
-        <UserPlus className="w-4 h-4" />
+        <UserPlusIcon className="w-4 h-4" />
       )}
       <span>{following ? 'Following' : 'Follow'}</span>
     </button>

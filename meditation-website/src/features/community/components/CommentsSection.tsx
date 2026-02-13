@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Send } from 'lucide-react'
+import { SendIcon } from '../../../components/icons'
 
 interface Comment {
   id: string
@@ -121,7 +121,7 @@ export default function CommentsSection({
             {submitting ? (
               <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
             ) : (
-              <Send className="w-4 h-4" />
+              <SendIcon className="w-4 h-4" />
             )}
           </button>
         </div>

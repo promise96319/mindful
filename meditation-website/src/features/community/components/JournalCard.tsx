@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Heart, MessageCircle, Share2 } from 'lucide-react'
+import { HeartIcon, MessageCircleIcon, ShareIcon } from '../../../components/icons'
 import { MOOD_ICONS } from '../../../types/journal'
 import CommentsSection from './CommentsSection'
 
@@ -179,7 +179,7 @@ export default function JournalCard({
               : 'text-text-secondary hover:text-pink-500'
           } ${isLiking ? 'opacity-50' : ''}`}
         >
-          <Heart
+          <HeartIcon
             className={`w-5 h-5 transition-all ${isLiked ? 'fill-current' : ''}`}
           />
           <span>{likesCount}</span>
@@ -189,7 +189,7 @@ export default function JournalCard({
           onClick={toggleComments}
           className="flex items-center gap-2 text-sm font-medium text-text-secondary hover:text-primary transition-all"
         >
-          <MessageCircle className="w-5 h-5" />
+          <MessageCircleIcon className="w-5 h-5" />
           <span>{comments.length || journal.commentsCount}</span>
         </button>
 
@@ -197,7 +197,7 @@ export default function JournalCard({
           onClick={handleShare}
           className="flex items-center gap-2 text-sm font-medium text-text-secondary hover:text-primary transition-all"
         >
-          <Share2 className="w-5 h-5" />
+          <ShareIcon className="w-5 h-5" />
         </button>
       </div>
 
