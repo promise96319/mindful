@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../../hooks/useAuth'
+import { getPublicJournals, likeJournal, unlikeJournal, addComment } from '../../../services/apiService'
 import SearchBar from '../components/SearchBar'
 import PublicJournalFeed from '../components/PublicJournalFeed'
 
@@ -11,35 +12,51 @@ export default function CommunityPage() {
   const [activeTab, setActiveTab] = useState<'all' | 'following'>('all')
   const [searchQuery, setSearchQuery] = useState('')
 
-  // Mock fetch function - replace with actual API call
   const fetchJournals = useCallback(async (
     page: number,
     limit: number,
     filter?: string,
     searchQuery?: string
   ) => {
-    // TODO: Replace with actual API call
-    // const response = await getPublicJournals(page, limit, filter, searchQuery)
-    // return response
-
-    // Mock data for now
-    console.log('Fetching journals:', { page, limit, filter, searchQuery })
-    return []
+    try {
+      const journals = await getPublicJournals(
+        page,
+        limit,
+        filter as 'all' | 'following' | undefined,
+        searchQuery
+      )
+      return journals
+    } catch (error) {
+      console.error('Failed to fetch public journals:', error)
+      return []
+    }
   }, [])
 
   const handleLike = async (journalId: string) => {
-    // TODO: Replace with actual API call
-    console.log('Like journal:', journalId)
+    try {
+      await likeJournal(journalId)
+    } catch (error) {
+      console.error('Failed to like journal:', error)
+      throw error
+    }
   }
 
   const handleUnlike = async (journalId: string) => {
-    // TODO: Replace with actual API call
-    console.log('Unlike journal:', journalId)
+    try {
+      await unlikeJournal(journalId)
+    } catch (error) {
+      console.error('Failed to unlike journal:', error)
+      throw error
+    }
   }
 
   const handleAddComment = async (journalId: string, content: string) => {
-    // TODO: Replace with actual API call
-    console.log('Add comment:', journalId, content)
+    try {
+      await addComment(journalId, content)
+    } catch (error) {
+      console.error('Failed to add comment:', error)
+      throw error
+    }
   }
 
   const handleShare = (journalId: string) => {
