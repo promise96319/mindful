@@ -17,6 +17,7 @@ export default function MeditationTool() {
   const [isActive, setIsActive] = useState(false)
   const [timeLeft, setTimeLeft] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
+  const [shouldEnterFullscreen, setShouldEnterFullscreen] = useState(false)
   const intervalRef = useRef<number | null>(null)
   const recordedRef = useRef(false)
 
@@ -55,6 +56,7 @@ export default function MeditationTool() {
     setIsActive(true)
     setIsComplete(false)
     recordedRef.current = false
+    setShouldEnterFullscreen(true)
   }
 
   const handlePause = () => {
@@ -86,7 +88,7 @@ export default function MeditationTool() {
   }
 
   return (
-    <FullscreenToolWrapper toolName="meditation">
+    <FullscreenToolWrapper toolName="meditation" shouldEnterFullscreen={shouldEnterFullscreen}>
       <div className="min-h-[80vh] flex flex-col items-center justify-center px-4">
       {timeLeft === 0 ? (
         <div className="w-full max-w-md animate-fade-in-up">
@@ -153,36 +155,47 @@ export default function MeditationTool() {
           </button>
         </div>
       ) : (
-        <div className="text-center animate-fade-in">
-          <div className="relative w-64 h-64 mx-auto mb-12">
-            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary-light/30 to-accent-light/30 animate-breathe" />
-            <div className="absolute inset-6 rounded-full bg-gradient-to-br from-primary/40 to-accent/40 animate-breathe" style={{ animationDelay: '0.5s' }} />
-            <div className="absolute inset-12 rounded-full bg-gradient-to-br from-primary-light to-primary shadow-large" />
+        <div className="text-center animate-fade-in w-full max-w-3xl">
+          {/* Meditation Icon - Enhanced for fullscreen */}
+          <div className="relative w-full aspect-square max-w-lg mx-auto mb-16">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary-light/20 to-accent-light/20 animate-breathe"
+                 style={{
+                   boxShadow: '0 0 100px rgba(var(--color-primary-rgb), 0.3)'
+                 }} />
+            <div className="absolute inset-8 rounded-full bg-gradient-to-br from-primary/30 to-accent/30 animate-breathe"
+                 style={{
+                   animationDelay: '0.5s',
+                   boxShadow: '0 0 80px rgba(var(--color-primary-rgb), 0.4)'
+                 }} />
+            <div className="absolute inset-16 rounded-full bg-gradient-to-br from-primary-light to-primary shadow-2xl"
+                 style={{
+                   boxShadow: '0 0 60px rgba(var(--color-primary-rgb), 0.5), inset 0 0 40px rgba(255, 255, 255, 0.1)'
+                 }} />
             <div className="absolute inset-0 flex items-center justify-center">
-              <svg className="w-20 h-20 text-white animate-gentle-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+              <svg className="w-32 h-32 md:w-40 md:h-40 text-white animate-gentle-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
               </svg>
             </div>
           </div>
 
-          <p className="text-lg text-text-secondary mb-6 font-medium">
+          <p className="text-xl md:text-2xl text-text-secondary mb-8 font-medium">
             {t(`meditation.themes.${theme}`)}
           </p>
 
-          <p className="text-6xl font-bold text-gradient mb-12">
+          <p className="text-7xl md:text-8xl font-bold text-gradient mb-16">
             {formatTime(timeLeft)}
           </p>
 
           <div className="flex gap-4 justify-center">
             <button
               onClick={handlePause}
-              className="px-8 py-4 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:scale-105"
+              className="px-10 py-5 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-medium text-lg shadow-soft hover:shadow-large transition-all duration-300 hover:scale-105"
             >
               {isActive ? t('common.pause') : t('common.start')}
             </button>
             <button
               onClick={handleReset}
-              className="px-8 py-4 border-2 border-border text-text-secondary rounded-2xl font-medium hover:border-primary/30 hover:bg-background-alt transition-all duration-300"
+              className="px-10 py-5 border-2 border-border text-text-secondary rounded-2xl font-medium text-lg hover:border-primary/30 hover:bg-background-alt transition-all duration-300"
             >
               {t('common.stop')}
             </button>
