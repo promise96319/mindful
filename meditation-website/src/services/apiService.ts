@@ -195,13 +195,13 @@ export interface Comment {
   userId: string
   userName: string
   userPhotoURL?: string
-  text: string
+  content: string
   createdAt: string
   updatedAt: string
 }
 
 export interface AddCommentRequest {
-  text: string
+  content: string
 }
 
 export async function getComments(journalId: string): Promise<Comment[]> {
@@ -211,7 +211,7 @@ export async function getComments(journalId: string): Promise<Comment[]> {
 export async function addComment(journalId: string, text: string): Promise<Comment> {
   return apiFetch<Comment>(`/api/social/comments/journal/${journalId}`, {
     method: 'POST',
-    body: JSON.stringify({ text }),
+    body: JSON.stringify({ content: text }),
   })
 }
 

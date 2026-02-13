@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import JournalCard from './JournalCard'
-import type { PublicJournal } from '../../../services/apiService'
+import type { PublicJournal, Comment } from '../../../services/apiService'
+import { getComments } from '../../../services/apiService'
 
 interface PublicJournalFeedProps {
   fetchJournals: (page: number, limit: number, filter?: string, searchQuery?: string) => Promise<PublicJournal[]>
@@ -24,11 +25,23 @@ export default function PublicJournalFeed({
   currentUserAvatar
 }: PublicJournalFeedProps) {
   const [journals, setJournals] = useState<PublicJournal[]>([])
+  const [commentsMap, setCommentsMap] = useState<Map<string, Comment[]>>(new Map())
   const [loading, setLoading] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
   const [hasMore, setHasMore] = useState(true)
   const [page, setPage] = useState(0)
   const observerTarget = useRef<HTMLDivElement>(null)
+
+  // Load comments for a journal
+  const loadCommentsForJournal = useCallback(async (journalId: string) => {
+    try {
+      const comments = await getComments(journalId)
+      setCommentsMap(prev => new Map(prev).set(journalId, comments))
+    } catch (error) {
+      console.error(`Failed to load comments for journal ${journalId}:`, error)
+      setCommentsMap(prev => new Map(prev).set(journalId, []))
+    }
+  }, [])
 
   const loadJournals = useCallback(async (pageNum: number, isLoadMore = false) => {
     if (isLoadMore) {
@@ -46,6 +59,13 @@ export default function PublicJournalFeed({
         setJournals(newJournals)
       }
 
+      // Load comments for new journals
+      newJournals.forEach(journal => {
+        if (!commentsMap.has(journal.id)) {
+          loadCommentsForJournal(journal.id)
+        }
+      })
+
       setHasMore(newJournals.length === 20)
     } catch (error) {
       console.error('Failed to fetch journals:', error)
@@ -53,7 +73,14 @@ export default function PublicJournalFeed({
       setLoading(false)
       setLoadingMore(false)
     }
-  }, [fetchJournals, filter, searchQuery])
+  }, [fetchJournals, filter, searchQuery, commentsMap, loadCommentsForJournal])
+
+  // Reload comments after adding a new comment
+  const handleAddComment = useCallback(async (journalId: string, content: string) => {
+    await onAddComment(journalId, content)
+    // Reload comments for this journal
+    await loadCommentsForJournal(journalId)
+  }, [onAddComment, loadCommentsForJournal])
 
   // Reset and load on filter/search change
   useEffect(() => {
@@ -121,10 +148,10 @@ export default function PublicJournalFeed({
               ...journal,
               userAvatar: journal.userPhotoURL,
             }}
-            comments={[]}
+            comments={commentsMap.get(journal.id) || []}
             onLike={onLike}
             onUnlike={onUnlike}
-            onAddComment={onAddComment}
+            onAddComment={handleAddComment}
             onShare={onShare}
             currentUserAvatar={currentUserAvatar}
           />
