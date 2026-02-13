@@ -66,33 +66,26 @@ export class JournalsController {
   }
 
   @Public()
-  @Get('public/feed')
+  @Get('public')
   async getPublicFeed(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
     @Query('sort') sort?: 'latest' | 'popular',
     @Query('search') search?: string,
+    @Query('filter') filter?: string,
   ) {
-    const pageNum = page ? parseInt(page, 10) : 1;
+    const pageNum = page ? parseInt(page, 10) : 0;
     const limitNum = limit ? parseInt(limit, 10) : 20;
     const sortBy = sort || 'latest';
 
     const { journals, total } = await this.journalsService.getPublicJournals(
-      pageNum,
+      pageNum + 1, // Convert 0-indexed page to 1-indexed for service
       limitNum,
       sortBy,
       search,
     );
 
-    return {
-      journals: journals.map((j) => this.journalsService.toResponse(j)),
-      pagination: {
-        page: pageNum,
-        limit: limitNum,
-        total,
-        totalPages: Math.ceil(total / limitNum),
-      },
-    };
+    return journals.map((j) => this.journalsService.toResponse(j));
   }
 
   @Get('following/feed')

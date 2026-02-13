@@ -154,7 +154,7 @@ export class JournalsService {
 
   toResponse(doc: JournalDocument) {
     const obj = doc.toObject();
-    return {
+    const response: Record<string, unknown> = {
       id: (obj._id as Types.ObjectId).toString(),
       date: obj.date,
       toolUsed: obj.toolUsed,
@@ -166,8 +166,23 @@ export class JournalsService {
       freeText: obj.freeText,
       isPublic: obj.isPublic,
       isAnonymous: obj.isAnonymous,
+      likes: obj.likeCount || 0,
+      commentsCount: obj.commentCount || 0,
+      isLiked: false, // TODO: Check if current user liked this
       createdAt: (obj as unknown as Record<string, unknown>).createdAt,
       updatedAt: (obj as unknown as Record<string, unknown>).updatedAt,
     };
+
+    // Include user info if populated
+    if (obj.userId && typeof obj.userId === 'object') {
+      const user = obj.userId as unknown as Record<string, unknown>;
+      response.userId = (user._id as Types.ObjectId).toString();
+      response.userName = user.displayName || user.username || 'Anonymous';
+      response.userPhotoURL = user.photoURL || user.avatar;
+    } else {
+      response.userId = (obj.userId as Types.ObjectId).toString();
+    }
+
+    return response;
   }
 }
