@@ -20,6 +20,7 @@ export default function RelaxationTool() {
   const [isActive, setIsActive] = useState(false)
   const [currentPart, setCurrentPart] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
+  const [shouldEnterFullscreen, setShouldEnterFullscreen] = useState(false)
   const startTimeRef = useRef<number>(0)
   const [elapsedTime, setElapsedTime] = useState(0)
   const recordedRef = useRef(false)
@@ -47,6 +48,7 @@ export default function RelaxationTool() {
     startTimeRef.current = Date.now()
     setElapsedTime(0)
     recordedRef.current = false
+    setShouldEnterFullscreen(true)
   }
 
   const handleNext = () => {
@@ -78,7 +80,7 @@ export default function RelaxationTool() {
   }
 
   return (
-    <FullscreenToolWrapper toolName="relaxation">
+    <FullscreenToolWrapper toolName="relaxation" shouldEnterFullscreen={shouldEnterFullscreen}>
       <div className="min-h-[80vh] flex flex-col items-center justify-center px-4">
       {!isActive ? (
         <div className="w-full max-w-md animate-fade-in-up">
@@ -130,47 +132,53 @@ export default function RelaxationTool() {
           </button>
         </div>
       ) : (
-        <div className="text-center w-full max-w-md animate-fade-in">
-          {/* Progress */}
-          <div className="mb-10">
-            <div className="flex justify-between text-sm text-text-secondary mb-3">
-              <span className="font-medium">{currentPart + 1} / {bodyParts.length}</span>
-              <span>{Math.round(((currentPart + 1) / bodyParts.length) * 100)}%</span>
+        <div className="text-center w-full max-w-2xl animate-fade-in">
+          {/* Progress - Enhanced for fullscreen */}
+          <div className="mb-12">
+            <div className="flex justify-between text-base md:text-lg text-text-secondary mb-4">
+              <span className="font-semibold">{currentPart + 1} / {bodyParts.length}</span>
+              <span className="font-medium">{Math.round(((currentPart + 1) / bodyParts.length) * 100)}%</span>
             </div>
-            <div className="h-3 bg-background-alt rounded-full overflow-hidden shadow-inner">
+            <div className="h-4 bg-background-alt rounded-full overflow-hidden shadow-inner">
               <div
-                className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-500 ease-out rounded-full"
-                style={{ width: `${((currentPart + 1) / bodyParts.length) * 100}%` }}
+                className="h-full bg-gradient-to-r from-primary via-primary-light to-secondary transition-all duration-500 ease-out rounded-full"
+                style={{
+                  width: `${((currentPart + 1) / bodyParts.length) * 100}%`,
+                  boxShadow: '0 0 20px rgba(var(--color-primary-rgb), 0.5)'
+                }}
               />
             </div>
           </div>
 
-          {/* Body Part Card */}
-          <div className="bg-gradient-to-br from-card to-background-alt p-10 rounded-3xl shadow-medium border border-border-light mb-10 animate-scale-in">
-            <p className="text-text-secondary mb-3 text-sm font-medium uppercase tracking-wide">
+          {/* Body Part Card - Enhanced for fullscreen */}
+          <div className="bg-gradient-to-br from-card to-background-alt p-12 md:p-16 rounded-3xl shadow-large border border-border-light mb-16 animate-scale-in"
+               style={{
+                 boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1), 0 0 60px rgba(var(--color-primary-rgb), 0.1)'
+               }}>
+            <p className="text-text-secondary mb-4 text-base md:text-lg font-medium uppercase tracking-wider">
               {mode === 'bodyScan' ? t('relaxation.focusOn') || 'Focus on your' : t('relaxation.tenseRelax') || 'Tense and relax your'}
             </p>
-            <h2 className="text-4xl font-bold text-gradient capitalize mb-4">
+            <h2 className="text-5xl md:text-6xl font-bold text-gradient capitalize mb-6">
               {t(`relaxation.bodyParts.${bodyParts[currentPart]}`) || bodyParts[currentPart]}
             </h2>
             {mode === 'muscleRelax' && (
-              <p className="text-text-secondary text-sm leading-relaxed bg-primary/5 px-4 py-3 rounded-xl">
+              <p className="text-text-secondary text-base md:text-lg leading-relaxed bg-primary/5 px-6 py-4 rounded-xl">
                 {t('relaxation.instruction') || 'Hold tension for 5 seconds, then release'}
               </p>
             )}
           </div>
 
-          {/* Controls */}
+          {/* Controls - Enhanced for fullscreen */}
           <div className="flex gap-4 justify-center">
             <button
               onClick={handleNext}
-              className="px-10 py-4 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:scale-105"
+              className="px-12 py-5 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-medium text-lg shadow-soft hover:shadow-large transition-all duration-300 hover:scale-105"
             >
               {currentPart < bodyParts.length - 1 ? t('common.next') || 'Next' : t('common.complete') || 'Complete'}
             </button>
             <button
               onClick={handleReset}
-              className="px-8 py-4 border-2 border-border text-text-secondary rounded-2xl font-medium hover:border-primary/30 hover:bg-background-alt transition-all duration-300"
+              className="px-10 py-5 border-2 border-border text-text-secondary rounded-2xl font-medium text-lg hover:border-primary/30 hover:bg-background-alt transition-all duration-300"
             >
               {t('common.stop')}
             </button>
