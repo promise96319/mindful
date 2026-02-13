@@ -1,5 +1,10 @@
 {
   "siteName": "Mindful",
+  "seo": {
+    "defaultTitle": "Mindful - Simple Meditation Learning Platform & Community",
+    "defaultDescription": "Mindful provides easy-to-use meditation learning resources, practice tools, and community sharing for everyone seeking inner peace. Start your meditation journey today.",
+    "defaultKeywords": "meditation,mindfulness,breathing exercises,relaxation,focus,meditation community,meditation tools,meditation learning"
+  },
   "nav": {
     "learn": "Learn",
     "tools": "Practice",

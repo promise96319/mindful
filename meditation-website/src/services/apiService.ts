@@ -215,7 +215,7 @@ export async function addComment(journalId: string, text: string): Promise<Comme
   })
 }
 
-export async function deleteComment(journalId: string, commentId: string): Promise<void> {
+export async function deleteComment(commentId: string): Promise<void> {
   await apiFetch(`/api/social/comments/${commentId}`, {
     method: 'DELETE',
   })

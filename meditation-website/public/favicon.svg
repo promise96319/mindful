@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Outer circle with gradient -->
+  <circle cx="50" cy="50" r="45" fill="url(#grad)"/>
+
+  <!-- Inner meditation circles -->
+  <circle cx="50" cy="50" r="28" fill="none" stroke="white" stroke-width="1.5" opacity="0.6"/>
+  <circle cx="50" cy="50" r="20" fill="none" stroke="white" stroke-width="1.5" opacity="0.8"/>
+  <circle cx="50" cy="50" r="12" fill="white" opacity="0.9"/>
+
+  <!-- Subtle pulse effect circles -->
+  <circle cx="50" cy="50" r="36" fill="none" stroke="white" stroke-width="0.8" opacity="0.3">
+    <animate attributeName="r" from="36" to="42" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" from="0.3" to="0" dur="2s" repeatCount="indefinite"/>
+  </circle>
+</svg>

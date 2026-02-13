@@ -1,0 +1,21 @@
+{
+  "name": "静心 - Mindful Meditation",
+  "short_name": "静心",
+  "description": "简单易用的冥想学习平台与社区",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#667eea",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["health", "lifestyle", "wellness"],
+  "lang": "zh-CN",
+  "dir": "auto"
+}

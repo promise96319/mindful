@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import SEO from '../components/SEO'
 import StatsCard from '../components/StatsCard'
 import { BookOpenIcon, PlayCircleIcon, ChartBarIcon, WindIcon, TargetIcon, MusicNoteIcon, ArrowRightIcon, ChevronRightIcon } from '../components/icons'
 
@@ -37,7 +38,9 @@ export default function Home() {
   ]
 
   return (
-    <div className="flex flex-col">
+    <>
+      <SEO />
+      <div className="flex flex-col">
       {/* Hero Section */}
       <section className="relative py-24 md:py-36 px-6 overflow-hidden">
         {/* Animated background elements */}
@@ -165,5 +168,6 @@ export default function Home() {
         </div>
       </section>
     </div>
+    </>
   )
 }
