@@ -8,13 +8,13 @@ import { StatsService } from './stats.service';
 import { CurrentUser } from '../common/decorators';
 import { ViewMode } from './aggregation.service';
 
-@Controller('stats')
+@Controller('api/stats')
 export class StatsController {
   constructor(private statsService: StatsService) {}
 
   @Get('heatmap')
   async getHeatmap(
-    @CurrentUser('sub') userId: string,
+    @CurrentUser('userId') userId: string,
     @Query('year') year?: string,
     @Query('viewMode') viewMode?: ViewMode,
   ) {
@@ -44,7 +44,7 @@ export class StatsController {
 
   @Get('emotion-calendar')
   async getEmotionCalendar(
-    @CurrentUser('sub') userId: string,
+    @CurrentUser('userId') userId: string,
     @Query('month') month?: string,
   ) {
     // Default to current month
@@ -70,7 +70,7 @@ export class StatsController {
   }
 
   @Get('overview')
-  async getOverview(@CurrentUser('sub') userId: string) {
+  async getOverview(@CurrentUser('userId') userId: string) {
     const stats = await this.statsService.getOverview(userId);
     return stats;
   }
