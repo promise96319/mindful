@@ -32,11 +32,23 @@ export class Journal {
   @Prop({ default: '' })
   freeText: string;
 
-  @Prop({ default: false })
+  @Prop({ default: false, index: true })
   isPublic: boolean;
 
   @Prop({ default: false })
   isAnonymous: boolean;
+
+  @Prop({ default: 0 })
+  likeCount: number;
+
+  @Prop({ default: 0 })
+  commentCount: number;
 }
 
 export const JournalSchema = SchemaFactory.createForClass(Journal);
+
+// Compound index for public journals sorted by creation date
+JournalSchema.index({ isPublic: 1, createdAt: -1 });
+
+// Text search index for free text search
+JournalSchema.index({ freeText: 'text' });

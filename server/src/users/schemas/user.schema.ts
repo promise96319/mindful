@@ -15,6 +15,12 @@ export class User {
   photoURL: string;
 
   @Prop()
+  avatar: string;
+
+  @Prop({ maxlength: 500 })
+  bio: string;
+
+  @Prop()
   passwordHash: string;
 
   @Prop()
@@ -33,6 +39,15 @@ export class User {
   settings: {
     theme: string;
     language: string;
+  };
+
+  @Prop({
+    type: Object,
+    default: { followingCount: 0, followerCount: 0 },
+  })
+  stats: {
+    followingCount: number;
+    followerCount: number;
   };
 
   @Prop()
