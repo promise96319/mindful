@@ -87,3 +87,152 @@ export async function migrateLocalRecords(records: { date: string; tool: string;
     await addPracticeRecord(record.tool, record.duration)
   }
 }
+
+// ==================== Social - Follow/Followers ====================
+
+export interface FollowResponse {
+  following: boolean
+  followersCount: number
+  followingCount: number
+}
+
+export async function followUser(userId: string): Promise<FollowResponse> {
+  return apiFetch<FollowResponse>(`/api/social/follow/${userId}`, {
+    method: 'POST',
+  })
+}
+
+export async function unfollowUser(userId: string): Promise<FollowResponse> {
+  return apiFetch<FollowResponse>(`/api/social/follow/${userId}`, {
+    method: 'DELETE',
+  })
+}
+
+export async function getFollowing(userId?: string): Promise<string[]> {
+  const endpoint = userId ? `/api/social/following/${userId}` : '/api/social/following'
+  return apiFetch<string[]>(endpoint)
+}
+
+export async function getFollowers(userId?: string): Promise<string[]> {
+  const endpoint = userId ? `/api/social/followers/${userId}` : '/api/social/followers'
+  return apiFetch<string[]>(endpoint)
+}
+
+export async function checkFollowing(userId: string): Promise<boolean> {
+  const result = await apiFetch<{ following: boolean }>(`/api/social/following/${userId}/check`)
+  return result.following
+}
+
+// ==================== Social - Likes ====================
+
+export interface LikeResponse {
+  liked: boolean
+  likesCount: number
+}
+
+export async function likeJournal(journalId: string): Promise<LikeResponse> {
+  return apiFetch<LikeResponse>(`/api/social/journals/${journalId}/like`, {
+    method: 'POST',
+  })
+}
+
+export async function unlikeJournal(journalId: string): Promise<LikeResponse> {
+  return apiFetch<LikeResponse>(`/api/social/journals/${journalId}/like`, {
+    method: 'DELETE',
+  })
+}
+
+export async function getLikedJournals(): Promise<string[]> {
+  return apiFetch<string[]>('/api/social/liked-journals')
+}
+
+export async function checkLiked(journalId: string): Promise<boolean> {
+  const result = await apiFetch<{ liked: boolean }>(`/api/social/journals/${journalId}/liked`)
+  return result.liked
+}
+
+// ==================== Social - Comments ====================
+
+export interface Comment {
+  id: string
+  journalId: string
+  userId: string
+  userName: string
+  userPhotoURL?: string
+  text: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface AddCommentRequest {
+  text: string
+}
+
+export async function getComments(journalId: string): Promise<Comment[]> {
+  return apiFetch<Comment[]>(`/api/social/journals/${journalId}/comments`)
+}
+
+export async function addComment(journalId: string, text: string): Promise<Comment> {
+  return apiFetch<Comment>(`/api/social/journals/${journalId}/comments`, {
+    method: 'POST',
+    body: JSON.stringify({ text }),
+  })
+}
+
+export async function deleteComment(journalId: string, commentId: string): Promise<void> {
+  await apiFetch(`/api/social/journals/${journalId}/comments/${commentId}`, {
+    method: 'DELETE',
+  })
+}
+
+// ==================== Stats - Heatmap ====================
+
+export interface HeatmapDataPoint {
+  date: string
+  value: number
+  tool?: string
+}
+
+export async function getHeatmapData(
+  year: number,
+  viewMode: 'all' | 'tool' = 'all',
+  tool?: string,
+): Promise<HeatmapDataPoint[]> {
+  let endpoint = `/api/stats/heatmap?year=${year}&viewMode=${viewMode}`
+  if (tool && viewMode === 'tool') {
+    endpoint += `&tool=${encodeURIComponent(tool)}`
+  }
+  return apiFetch<HeatmapDataPoint[]>(endpoint)
+}
+
+// ==================== Stats - Emotion Calendar ====================
+
+export interface EmotionCalendarDataPoint {
+  date: string
+  mood: number
+  focus: number
+}
+
+export async function getEmotionCalendarData(month: string): Promise<EmotionCalendarDataPoint[]> {
+  return apiFetch<EmotionCalendarDataPoint[]>(`/api/stats/emotion-calendar?month=${month}`)
+}
+
+// ==================== Stats - User Statistics ====================
+
+export interface UserStatistics {
+  totalSessions: number
+  totalMinutes: number
+  currentStreak: number
+  longestStreak: number
+  averageSessionDuration: number
+  favoriteTools: Array<{ tool: string; count: number; totalMinutes: number }>
+  moodDistribution: Array<{ mood: number; count: number }>
+  focusDistribution: Array<{ focus: number; count: number }>
+  practiceByDayOfWeek: Array<{ day: number; count: number; totalMinutes: number }>
+  practiceByTimeOfDay: Array<{ hour: number; count: number }>
+}
+
+export async function getUserStatistics(userId?: string): Promise<UserStatistics> {
+  const endpoint = userId ? `/api/stats/user/${userId}` : '/api/stats/user'
+  return apiFetch<UserStatistics>(endpoint)
+}
