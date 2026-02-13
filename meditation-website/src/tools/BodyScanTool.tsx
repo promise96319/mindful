@@ -35,6 +35,7 @@ export default function BodyScanTool() {
   const [partTimeLeft, setPartTimeLeft] = useState(0)
   const [totalElapsed, setTotalElapsed] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
+  const [shouldEnterFullscreen, setShouldEnterFullscreen] = useState(false)
   const intervalRef = useRef<number | null>(null)
   const hasRecordedRef = useRef(false)
 
@@ -93,6 +94,7 @@ export default function BodyScanTool() {
     setTotalElapsed(0)
     setIsComplete(false)
     hasRecordedRef.current = false
+    setShouldEnterFullscreen(true)
   }
 
   const handlePause = () => {
@@ -130,7 +132,7 @@ export default function BodyScanTool() {
   }
 
   return (
-    <FullscreenToolWrapper toolName="bodyScan">
+    <FullscreenToolWrapper toolName="bodyScan" shouldEnterFullscreen={shouldEnterFullscreen}>
       <div className="min-h-[80vh] flex flex-col items-center justify-center px-4">
       {!isActive ? (
         <div className="w-full max-w-md animate-fade-in-up">
@@ -175,75 +177,79 @@ export default function BodyScanTool() {
           </button>
         </div>
       ) : (
-        <div className="text-center w-full max-w-2xl animate-fade-in">
-          <div className="flex flex-col md:flex-row items-center gap-8 mb-8">
-            {/* Body outline */}
-            <div className="w-48 h-72 flex-shrink-0">
+        <div className="text-center w-full max-w-3xl animate-fade-in">
+          {/* Body scan content - Enhanced for fullscreen */}
+          <div className="flex flex-col md:flex-row items-center gap-10 mb-12">
+            {/* Body outline - Larger */}
+            <div className="w-64 h-96 flex-shrink-0">
               <BodyOutline highlightPart={currentPart.id} />
             </div>
 
-            {/* Scan info */}
+            {/* Scan info - Enhanced */}
             <div className="flex-1 text-left">
-              <h2 className="text-2xl font-bold text-gradient mb-2">
+              <h2 className="text-4xl md:text-5xl font-bold text-gradient mb-4">
                 {t(`bodyScan.parts.${currentPart.key}`)}
               </h2>
-              <p className="text-text-secondary mb-4 leading-relaxed">
+              <p className="text-text-secondary text-lg md:text-xl mb-6 leading-relaxed">
                 {t(`bodyScan.guidance.${currentPart.key}`)}
               </p>
 
-              {/* Part progress indicator */}
-              <div className="flex items-center gap-2 mb-2">
+              {/* Part progress indicator - Enhanced */}
+              <div className="flex items-center gap-2 mb-3">
                 {bodyParts.map((_, idx) => (
                   <div
                     key={idx}
-                    className={`h-2 flex-1 rounded-full transition-all duration-500 ${
+                    className={`h-3 flex-1 rounded-full transition-all duration-500 ${
                       idx < currentPartIndex
-                        ? 'bg-primary'
+                        ? 'bg-primary shadow-[0_0_10px_rgba(var(--color-primary-rgb),0.5)]'
                         : idx === currentPartIndex
-                        ? 'bg-gradient-to-r from-primary to-primary-light'
+                        ? 'bg-gradient-to-r from-primary to-primary-light shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.7)]'
                         : 'bg-border-light'
                     }`}
                   />
                 ))}
               </div>
-              <p className="text-sm text-text-secondary">
+              <p className="text-base md:text-lg text-text-secondary font-medium">
                 {currentPartIndex + 1} / {bodyParts.length}
               </p>
             </div>
           </div>
 
-          {/* Progress bar */}
-          <div className="w-full bg-border-light rounded-full h-3 mb-4 overflow-hidden">
+          {/* Progress bar - Enhanced */}
+          <div className="w-full bg-border-light rounded-full h-4 mb-5 overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-primary to-primary-light rounded-full transition-all duration-1000"
-              style={{ width: `${progressPercent}%` }}
+              className="h-full bg-gradient-to-r from-primary via-primary-light to-secondary rounded-full transition-all duration-1000"
+              style={{
+                width: `${progressPercent}%`,
+                boxShadow: '0 0 20px rgba(var(--color-primary-rgb), 0.5)'
+              }}
             />
           </div>
 
-          {/* Timer */}
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-text-secondary">{formatTime(totalElapsed)}</span>
-            <span className="text-sm text-text-secondary">{formatTime(totalDuration)}</span>
+          {/* Timer - Enhanced */}
+          <div className="flex items-center justify-between mb-3 text-base md:text-lg text-text-secondary">
+            <span className="font-medium">{formatTime(totalElapsed)}</span>
+            <span className="font-medium">{formatTime(totalDuration)}</span>
           </div>
 
-          <p className="text-4xl font-bold text-gradient mb-2">
+          <p className="text-6xl md:text-7xl font-bold text-gradient mb-3">
             {formatTime(totalDuration - totalElapsed)}
           </p>
-          <p className="text-text-secondary text-sm mb-8">
+          <p className="text-text-secondary text-lg mb-12">
             {t('bodyScan.partTimeLeft')}: {formatTime(partTimeLeft)}
           </p>
 
-          {/* Controls */}
+          {/* Controls - Enhanced */}
           <div className="flex gap-4 justify-center">
             <button
               onClick={handlePause}
-              className="px-8 py-4 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:scale-105"
+              className="px-10 py-5 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-medium text-lg shadow-soft hover:shadow-large transition-all duration-300 hover:scale-105"
             >
               {isPaused ? t('common.resume') : t('common.pause')}
             </button>
             <button
               onClick={handleReset}
-              className="px-8 py-4 border-2 border-border text-text-secondary rounded-2xl font-medium hover:border-primary/30 hover:bg-background-alt transition-all duration-300"
+              className="px-10 py-5 border-2 border-border text-text-secondary rounded-2xl font-medium text-lg hover:border-primary/30 hover:bg-background-alt transition-all duration-300"
             >
               {t('common.stop')}
             </button>
