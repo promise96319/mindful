@@ -14,6 +14,7 @@ export default function FocusTool() {
   const [isActive, setIsActive] = useState(false)
   const [timeLeft, setTimeLeft] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
+  const [shouldEnterFullscreen, setShouldEnterFullscreen] = useState(false)
   const intervalRef = useRef<number | null>(null)
   const recordedRef = useRef(false)
 
@@ -52,6 +53,7 @@ export default function FocusTool() {
     setIsActive(true)
     setIsComplete(false)
     recordedRef.current = false
+    setShouldEnterFullscreen(true)
   }
 
   const handleReset = () => {
@@ -79,7 +81,7 @@ export default function FocusTool() {
   }
 
   return (
-    <FullscreenToolWrapper toolName="focus">
+    <FullscreenToolWrapper toolName="focus" shouldEnterFullscreen={shouldEnterFullscreen}>
       <div className="min-h-[80vh] flex flex-col items-center justify-center px-4">
       {!isActive ? (
         <div className="w-full max-w-md animate-fade-in-up">
@@ -122,24 +124,50 @@ export default function FocusTool() {
           </button>
         </div>
       ) : (
-        <div className="text-center w-full max-w-2xl animate-fade-in">
-          <div className="relative w-full aspect-square max-w-md mx-auto mb-12 flex items-center justify-center">
-            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary-light/20 to-accent-light/20 animate-breathe" />
-            <div className="absolute inset-8 rounded-full bg-gradient-to-br from-primary/30 to-accent/30 animate-breathe" style={{ animationDelay: '0.5s' }} />
-            <div className="absolute inset-16 rounded-full bg-gradient-to-br from-primary-light/40 to-accent-light/40 animate-breathe" style={{ animationDelay: '1s' }} />
+        <div className="text-center w-full max-w-4xl animate-fade-in">
+          {/* Focus Point - Enhanced for fullscreen with larger concentric circles */}
+          <div className="relative w-full aspect-square max-w-2xl mx-auto mb-16 flex items-center justify-center">
+            {/* Outer rings with enhanced glow */}
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary-light/10 to-accent-light/10 animate-breathe"
+                 style={{
+                   boxShadow: '0 0 80px rgba(var(--color-primary-rgb), 0.2), inset 0 0 40px rgba(var(--color-primary-rgb), 0.1)'
+                 }} />
+            <div className="absolute inset-8 rounded-full bg-gradient-to-br from-primary/15 to-accent/15 animate-breathe"
+                 style={{
+                   animationDelay: '0.5s',
+                   boxShadow: '0 0 60px rgba(var(--color-primary-rgb), 0.25), inset 0 0 30px rgba(var(--color-primary-rgb), 0.15)'
+                 }} />
+            <div className="absolute inset-16 rounded-full bg-gradient-to-br from-primary-light/20 to-accent-light/20 animate-breathe"
+                 style={{
+                   animationDelay: '1s',
+                   boxShadow: '0 0 40px rgba(var(--color-primary-rgb), 0.3), inset 0 0 20px rgba(var(--color-primary-rgb), 0.2)'
+                 }} />
+            <div className="absolute inset-24 rounded-full bg-gradient-to-br from-primary/25 to-accent/25 animate-breathe"
+                 style={{
+                   animationDelay: '1.5s',
+                   boxShadow: '0 0 30px rgba(var(--color-primary-rgb), 0.35)'
+                 }} />
+
+            {/* Center focus point - larger and more prominent */}
             <div className="relative">
-              <div className="absolute inset-0 w-8 h-8 rounded-full bg-primary/30 blur-xl animate-pulse" />
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary-dark shadow-large shadow-primary/50 animate-gentle-pulse" />
+              <div className="absolute inset-0 w-16 h-16 -m-8 rounded-full bg-primary/20 blur-2xl animate-pulse" />
+              <div className="absolute inset-0 w-12 h-12 -m-6 rounded-full bg-primary/30 blur-xl animate-pulse" style={{ animationDelay: '0.5s' }} />
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary via-primary-light to-primary-dark shadow-2xl animate-gentle-pulse"
+                   style={{
+                     boxShadow: '0 0 60px rgba(var(--color-primary-rgb), 0.6), 0 0 120px rgba(var(--color-primary-rgb), 0.4), inset 0 0 20px rgba(255, 255, 255, 0.3)'
+                   }} />
             </div>
           </div>
 
-          <p className="text-6xl font-bold text-gradient mb-12">
+          {/* Timer Display - Larger and more prominent */}
+          <p className="text-7xl md:text-8xl font-bold text-gradient mb-20">
             {formatTime(timeLeft)}
           </p>
 
+          {/* Stop Button - Larger for fullscreen */}
           <button
             onClick={handleReset}
-            className="px-8 py-4 border-2 border-border text-text-secondary rounded-2xl font-medium hover:border-primary/30 hover:bg-background-alt transition-all duration-300"
+            className="px-10 py-5 border-2 border-border text-text-secondary rounded-2xl font-medium text-lg hover:border-primary/30 hover:bg-background-alt transition-all duration-300 hover:scale-105"
           >
             {t('common.stop')}
           </button>
