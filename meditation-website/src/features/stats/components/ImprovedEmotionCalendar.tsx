@@ -226,7 +226,7 @@ export default function ImprovedEmotionCalendar({ journals }: ImprovedEmotionCal
           </div>
 
           <div className="space-y-2 max-h-48 overflow-y-auto">
-            {selectedDay.journalIds.map((journalId, idx) => {
+            {selectedDay.journalIds.map((journalId) => {
               const journal = journals.find(j => j.id === journalId)
               if (!journal) return null
 

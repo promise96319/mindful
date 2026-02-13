@@ -79,11 +79,11 @@ export default function ProfilePage() {
     }
   }, [journals])
 
-  // Transform records for heatmap
-  const practiceRecords = useMemo(
-    () => records.map((r) => ({ date: r.date, duration: r.duration })),
-    [records]
-  )
+  // Transform records for heatmap (currently unused, will be used in future enhancements)
+  // const practiceRecords = useMemo(
+  //   () => records.map((r) => ({ date: r.date, duration: r.duration })),
+  //   [records]
+  // )
 
   if (!currentUser) {
     return (
