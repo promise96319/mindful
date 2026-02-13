@@ -16,6 +16,7 @@ export default function TimerTool() {
   const [isPaused, setIsPaused] = useState(false)
   const [timeLeft, setTimeLeft] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
+  const [shouldEnterFullscreen, setShouldEnterFullscreen] = useState(false)
   const intervalRef = useRef<number | null>(null)
   const recordedRef = useRef(false)
 
@@ -58,6 +59,7 @@ export default function TimerTool() {
       setIsPaused(false)
       setIsComplete(false)
       recordedRef.current = false
+      setShouldEnterFullscreen(true)
     }
   }
 
@@ -95,7 +97,7 @@ export default function TimerTool() {
   }
 
   return (
-    <FullscreenToolWrapper toolName="timer">
+    <FullscreenToolWrapper toolName="timer" shouldEnterFullscreen={shouldEnterFullscreen}>
       <div className="min-h-[80vh] flex flex-col items-center justify-center px-4">
       {!isActive ? (
         <div className="w-full max-w-md animate-fade-in-up">
@@ -156,28 +158,33 @@ export default function TimerTool() {
           </button>
         </div>
       ) : (
-        <div className="text-center animate-fade-in">
-          <div className="relative w-80 h-80 mx-auto mb-12">
+        <div className="text-center animate-fade-in w-full max-w-3xl">
+          {/* Timer Circle - Enhanced for fullscreen */}
+          <div className="relative w-full aspect-square max-w-lg mx-auto mb-16">
             <svg className="w-full h-full transform -rotate-90">
               <circle
-                cx="160"
-                cy="160"
-                r="140"
+                cx="50%"
+                cy="50%"
+                r="45%"
                 fill="none"
                 stroke="var(--color-background-alt)"
-                strokeWidth="12"
+                strokeWidth="8"
+                opacity="0.3"
               />
               <circle
-                cx="160"
-                cy="160"
-                r="140"
+                cx="50%"
+                cy="50%"
+                r="45%"
                 fill="none"
                 stroke="url(#gradient)"
-                strokeWidth="12"
+                strokeWidth="8"
                 strokeLinecap="round"
-                strokeDasharray={2 * Math.PI * 140}
-                strokeDashoffset={2 * Math.PI * 140 * (1 - progress / 100)}
+                strokeDasharray={2 * Math.PI * 0.45 * (typeof window !== 'undefined' ? Math.min(window.innerWidth, window.innerHeight) * 0.5 : 200)}
+                strokeDashoffset={2 * Math.PI * 0.45 * (typeof window !== 'undefined' ? Math.min(window.innerWidth, window.innerHeight) * 0.5 : 200) * (1 - progress / 100)}
                 className="transition-all duration-1000"
+                style={{
+                  filter: 'drop-shadow(0 0 20px rgba(var(--color-primary-rgb), 0.5))'
+                }}
               />
               <defs>
                 <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -188,10 +195,10 @@ export default function TimerTool() {
             </svg>
 
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-6xl font-bold text-gradient mb-2">
+              <span className="text-7xl md:text-8xl font-bold text-gradient mb-4">
                 {formatTime(timeLeft)}
               </span>
-              <span className="text-text-secondary text-sm">
+              <span className="text-text-secondary text-lg md:text-xl font-medium">
                 {Math.round(progress)}% {t('common.complete') || 'complete'}
               </span>
             </div>
@@ -200,13 +207,13 @@ export default function TimerTool() {
           <div className="flex gap-4 justify-center">
             <button
               onClick={handlePause}
-              className="px-8 py-4 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-medium shadow-soft hover:shadow-medium transition-all duration-300 hover:scale-105"
+              className="px-10 py-5 bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl font-medium text-lg shadow-soft hover:shadow-large transition-all duration-300 hover:scale-105"
             >
               {isPaused ? t('common.start') : t('common.pause')}
             </button>
             <button
               onClick={handleReset}
-              className="px-8 py-4 border-2 border-border text-text-secondary rounded-2xl font-medium hover:border-primary/30 hover:bg-background-alt transition-all duration-300"
+              className="px-10 py-5 border-2 border-border text-text-secondary rounded-2xl font-medium text-lg hover:border-primary/30 hover:bg-background-alt transition-all duration-300"
             >
               {t('common.reset')}
             </button>
