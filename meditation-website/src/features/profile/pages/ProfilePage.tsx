@@ -10,6 +10,7 @@ import ProfileHeader from '../components/ProfileHeader'
 import StatsCards from '../components/StatsCards'
 import ImprovedHeatmap from '../../stats/components/ImprovedHeatmap'
 import ImprovedEmotionCalendar from '../../stats/components/ImprovedEmotionCalendar'
+import PracticeDurationBarChart from '../../stats/components/PracticeDurationBarChart'
 import type { AppUser } from '../../../types/user'
 import type { JournalEntry } from '../../../types/journal'
 
@@ -184,6 +185,11 @@ export default function ProfilePage() {
             {/* Practice Heatmap */}
             <div>
               <ImprovedHeatmap records={records} />
+            </div>
+
+            {/* Practice Duration Bar Chart */}
+            <div>
+              <PracticeDurationBarChart records={records} />
             </div>
 
             {/* Emotion Calendar */}
